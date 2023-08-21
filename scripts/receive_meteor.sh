@@ -207,7 +207,7 @@ elif [ "$METEOR_RECEIVER" == "gnuradio" ]; then
     $METEORDEMOD -m oqpsk -diff 1 -s 72000 -sat METEOR-M-2-3 -t "$TLE_FILE" -f jpg -i "${RAMFS_AUDIO_BASE}.wav" >> $NOAA_LOG 2>&1
   fi
   
-  rm *.gcp *.bmp "${RAMFS_AUDIO_BASE}.wav"
+  rm *.gcp *.bmp #"${RAMFS_AUDIO_BASE}.wav"
 
   for i in spread_*.jpg
   do

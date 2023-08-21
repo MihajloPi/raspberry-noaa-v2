@@ -18,7 +18,7 @@ audio_output: "{{ output_root }}/audio"
 videos_output: "{{ output_root }}/videos"
 
 # file used for NOAA animations
-noaa_animation_output: "{{ videos_output }}/RollingAnimation.mp4"
+noaa_animation_output: "{{ videos_output }}/RollingAnimation.webm"
 
 # ramfs location
 ramfs_path: "/var/ramfs"
@@ -27,7 +27,11 @@ ramfs_path: "/var/ramfs"
 log_file: "/var/log/raspberry-noaa-v2/output.log"
 
 # TLS self-signed certs
-tls_cert: /etc/letsencrypt/live/{{ web_server_name }}/fullchain.pem
-tls_cert_key: /etc/letsencrypt/live/{{ web_server_name }}/privkey.pem
+tls_cert: /etc/letsencrypt/live/{{ web_server_name }}/fullchain.pem
+tls_cert_key: /etc/letsencrypt/live/{{ web_server_name }}/privkey.pem
 tls_trusted_certificate: /etc/letsencrypt/live/{{ web_server_name }}/chain.pem
+
+www_tls_cert: /etc/letsencrypt/live/www.{{web_server_name}}/fullchain.pem
+www_tls_cert_key: /etc/letsencrypt/live/www.{{web_server_name}}/privkey.pem
+www_tls_trusted_certificate: /etc/letsencrypt/live/www.{{web_server_name}}/chain.pem
 ...
