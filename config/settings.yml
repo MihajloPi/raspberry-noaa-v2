@@ -84,7 +84,7 @@ meteor_m2_gain: 18.0
 meteor_m2_sun_min_elevation: 0
 meteor_m2_sat_min_elevation: 20
 meteor_m2_memory_threshold: 1000
-meteor_80k_interleaving: true
+meteor_80k_interleaving: false
 
 # how many days to schedule passes - note this MUST be an even integer,
 # and the current day counts as "1" - passes will be scheduled until midnight
