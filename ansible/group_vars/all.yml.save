@@ -31,7 +31,6 @@ tls_cert: /etc/letsencrypt/live/{{ web_server_name }}/fullchain.pem
 tls_cert_key: /etc/letsencrypt/live/{{ web_server_name }}/privkey.pem
 tls_trusted_certificate: /etc/letsencrypt/live/{{ web_server_name }}/chain.pem
 
-tls_cert: /etc/letsencrypt/live/www.{{ web_server_name }}/fullchain.pem
-tls_cert_key: /etc/letsencrypt/live/www.{{ web_server_name }}/privkey.pem
-tls_trusted_certificate: /etc/letsencrypt/live/www.{{ web_server_name }}/chain.pem
-...
+tls_cert: /etc/letsencrypt/live/{{ web_server_name }}/fullchain.pem ... 
+tls_cert_key: /etc/letsencrypt/live/{{ web_server_name }}/privkey.pem
+tls_trusted_certificate: /etc/letsencrypt/live/{{ web_server_name }}/chain.pem

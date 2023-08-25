@@ -24,9 +24,9 @@
 <table style="width: 830px; text-align: left; background-color: silver; border-radius: 20px; padding: 2px; height: 20px;">
   <tbody>
     <tr>
-      <td style="width: 310px;">
+      <td style="width: 322px;">
         <center>
-          <img height="72" src="raspberry-noaa-v2-logo.png" alt="RaspbiNOAA v2 Logo">
+          <img height="150" src="stamp.png" alt="My Logo">
           <br>
           <font color="black">RaspiNOAA V2 | v3.0 | Bullseye<br>https://{{ web_server_name }}</font>
         </center>
