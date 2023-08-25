@@ -47,6 +47,8 @@ meteor_receiver: 'gnuradio'
 #   <satellite_name>_memory_threshold - for METEOR satellite, minimum free memory (MB) required to store pass in RAM
 
 #Supported gain values (29): 0.0 0.9 1.4 2.7 3.7 7.7 8.7 12.5 14.4 15.7 16.6 19.7 20.7 22.9 25.4 28.0 29.7 32.8 33.8 36.4 37.2 38.6 40.2 42.1 43.4 43.9 44.5 48.0 49.6
+noaa_memory_threshold: 100 
+meteor_m2_memory_threshold: 600
 
 noaa_15_schedule: true
 noaa_15_sdr_device_id: 0
@@ -80,10 +82,9 @@ meteor_m2_sdr_device_id: 0
 meteor_m2_freq_offset: 0
 meteor_m2_enable_bias_tee: false
 #Bilo je 32.8 RTL-SDR v3
-meteor_m2_gain: 18.0
+meteor_m2_gain: 17.0
 meteor_m2_sun_min_elevation: 0
 meteor_m2_sat_min_elevation: 20
-meteor_m2_memory_threshold: 1000
 meteor_80k_interleaving: false
 
 # how many days to schedule passes - note this MUST be an even integer,
@@ -97,7 +98,8 @@ meteor_80k_interleaving: false
 days_to_schedule_passes: 7
 
 # whether audio files should be deleted after images are created
-delete_audio: true
+delete_noaa_audio: true
+delete_meteor_audio: true
 
 # processing settings
 #   flip_meteor_image - whether the meteor image should be flipped
@@ -151,6 +153,7 @@ meteor_create_rain_probability_overlay: true
 meteor_create_equidistant_projection: true
 meteor_create_mercator_projection: false
 meteor_create_spreaded_images_without_overlay: true
+satdump_image_scaling_factor: 1
 
 # noaa map configurations
 # http://usradioguy.com/wp-content/uploads/2020/05/wxtoimgcommand-line.pdf

@@ -77,7 +77,9 @@
       "minimum": 0,
       "maximum": 90
     },
+    "noaa_memory_threshold":           { "type": "number" },
     "meteor_m2_memory_threshold":      { "type": "number" },
+    "meteor_80k_interleaving":         { "type": "boolean" },
     "days_to_schedule_passes":         { "type": "number" },
     "delete_audio":                    { "type": "boolean" },
     "flip_meteor_image":               { "type": "boolean" },
@@ -112,6 +114,11 @@
     "meteor_create_mercator_projection":             { "type": "boolean" },
     "meteor_create_spreaded_images_without_overlay": { "type": "boolean" },
     "meteor_create_rain_probability_overlay":        { "type": "boolean" },
+    "satdump_image_scaling_factor": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
     "noaa_map_crosshair_enable":                     { "type": "boolean" },
     "noaa_map_crosshair_color":                      { "type": "string" },
     "noaa_map_grid_degrees":                         { "type": "number" },
@@ -216,7 +223,8 @@
     "meteor_m2_sat_min_elevation",
     "meteor_m2_memory_threshold",
     "days_to_schedule_passes",
-    "delete_audio",
+    "delete_noaa_audio",
+    "delete_meteor_audio",
     "flip_meteor_image",
     "produce_spectrogram",
     "noaa_crop_telemetry",
