@@ -4,7 +4,7 @@ cd ~/raspberry-noaa-v2/tmp
 
 for i in {1..5}; do
   counter=$((6-$i))
-  wget https://hidmet.gov.rs/data/satelitska_slika/Srbija_com_$i.png
+  wget --no-check-certificate https://hidmet.gov.rs/data/satelitska_slika/Srbija_com_$i.png
   convert Srbija_com_$i.png -quality 100 Srbija_com_$counter.jpg
   rm Srbija_com_$i.png
 done
