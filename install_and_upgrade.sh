@@ -103,6 +103,24 @@ fi
 # source some env vars
 . "$HOME/.noaa-v2.conf"
 
+# Allow or remove HTTP port
+if [ "$ENABLE_NON_TLS" = true ]; then
+  log_running "Adding HTTP firewall rule for port $WEBPANEL_PORT..."
+  sudo ufw allow $WEBPANEL_PORT/tcp
+else
+  log_running "Removing HTTP firewall rule for port $WEBPANEL_PORT..."
+  sudo ufw delete allow $WEBPANEL_PORT/tcp
+fi
+
+# Allow or remove HTTPS port
+if [ "$ENABLE_TLS" = true ]; then
+  log_running "Adding HTTPS firewall rule for port $WEBPANEL_TLS_PORT..."
+  sudo ufw allow $WEBPANEL_TLS_PORT/tcp
+else
+  log_running "Removing HTTP firewall rule for port $WEBPANEL_TLS_PORT..."
+  sudo ufw delete allow $WEBPANEL_TLS_PORT/tcp
+fi
+
 log_running "Installing certbot for SSL certificates signed by the Let's Encrypt..."
 if [ $? -eq 0 ]; then
   sudo apt install certbot
