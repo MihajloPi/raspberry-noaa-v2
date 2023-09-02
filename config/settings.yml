@@ -95,13 +95,13 @@ meteor_80k_interleaving: false
 #       value, you must run the schedule script manually and pass the '-x' switch
 #       after re-running the ./install_and_upgrade.sh script to align the variables:
 #           ./scripts/schedule.sh -x
-days_to_schedule_passes: 7
+days_to_schedule_passes: 1
 
 # pruning capabilities - must be configured in cron (see documentation)
 #   delete_oldest_n - how many oldest captures to delete on each run
 #   delete_older_than_n - delete all images older than this many days
-delete_oldest_n: 0
-delete_older_than_n: 30
+delete_oldest_n: 3
+delete_older_than_n: 5
 
 # whether audio files should be deleted after images are created
 delete_noaa_audio: true
@@ -244,7 +244,7 @@ log_level: DEBUG
 # in the passes view - note that this iframe-driven visualization is
 # by default disabled on "extra-small" devices such as phones due to
 # the processing and space requirements
-enable_satvis: true
+enable_satvis: false
 
 # whether to enable the image video in the passes view - note that this
 # is by default disabled on "extra-small" devices such as phones due
