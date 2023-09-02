@@ -27,8 +27,8 @@ ntp_server: ''
 #   meteor_receiver - which receiver method to use (either 'rtl_fm' or 'gnuradio' or 'satdump')
 receiver_type: 'rtlsdr'
 
-noaa_receiver: 'gnuradio'
-meteor_receiver: 'satdump'
+noaa_receiver: 'rtl_fm'
+meteor_receiver: 'rtl_fm'
 
 # test settings when running test scripts
 #   test_gain - gain to use for scanner test scripts
