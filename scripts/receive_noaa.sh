@@ -117,6 +117,12 @@ else
   gain_option="--general_gain"
 fi
 
+if [ "$BIAS_TEE" == "-T" ]; then
+    bias_tee_option="--bias"
+else
+    bias_tee_option=""
+fi
+
 # pass start timestamp and sun elevation
 PASS_START=$(expr "$EPOCH_START" + 90)
 export SUN_ELEV=$(python3 "$SCRIPTS_DIR"/tools/sun.py "$PASS_START")
@@ -151,7 +157,7 @@ elif [ "$NOAA_RECEIVER" == "gnuradio" ]; then
   ffmpeg -hide_banner -loglevel error -i "$3" -c:a copy "${3%.*}_tmp.wav" && ffmpeg -i "${3%.*}_tmp.wav" -c:a copy -y "$3" && rm "${3%.*}_tmp.wav"
 elif [ "$NOAA_RECEIVER" == "satdump" ]; then
   log "Starting SatDump recording and live decoding" "INFO"
-  satdump live noaa_apt . --source $receiver --samplerate $samplerate --frequency "${NOAA_FREQUENCY}e6" --satellite_number ${SAT_NUMBER} $gain_option $GAIN --start_timestamp $PASS_START --timeout $CAPTURE_TIME --finish_processing >> $NOAA_LOG 2>&1
+  satdump live noaa_apt . --source $receiver --samplerate $samplerate --frequency "${NOAA_FREQUENCY}e6" --satellite_number ${SAT_NUMBER} $gain_option $GAIN $bias_tee_option --start_timestamp $PASS_START --timeout $CAPTURE_TIME --finish_processing >> $NOAA_LOG 2>&1
   rm satdump.logs product.cbor dataset.json
   spectrogram=0
   pristine=0
@@ -163,43 +169,9 @@ sleep 2
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-polar_az_el=0
-if [[ "${PRODUCE_POLAR_AZ_EL}" == "true" ]]; then
-  log "Producing polar graph of azimuth and elevation for pass" "INFO"
-  polar_az_el=1
-  epoch_end=$((EPOCH_START + CAPTURE_TIME))
-  ${IMAGE_PROC_DIR}/polar_plot.py "${SAT_NAME}" \
-                                  "${TLE_FILE}" \
-                                  $EPOCH_START \
-                                  $epoch_end \
-                                  $LAT \
-                                  $LON \
-                                  $SAT_MIN_ELEV \
-                                  $PASS_DIRECTION \
-                                  "${IMAGE_FILE_BASE}-polar-azel.jpg" \
-                                  "azel" >> $NOAA_LOG 2>&1
-  ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-polar-azel.jpg" "${IMAGE_THUMB_BASE}-polar-azel.jpg" >> $NOAA_LOG 2>&1
-fi
-
-polar_direction=0
-if [[ "${PRODUCE_POLAR_DIRECTION}" == "true" ]]; then
-  log "Producing polar graph of direction for pass" "INFO"
-  polar_direction=1
-  epoch_end=$((EPOCH_START + CAPTURE_TIME))
-  ${IMAGE_PROC_DIR}/polar_plot.py "${SAT_NAME}" \
-                                  "${TLE_FILE}" \
-                                  $EPOCH_START \
-                                  $epoch_end \
-                                  $LAT \
-                                  $LON \
-                                  $SAT_MIN_ELEV \
-                                  $PASS_DIRECTION \
-                                  "${IMAGE_FILE_BASE}-polar-direction.png" \
-                                  "direction" >> $NOAA_LOG 2>&1
-  ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-polar-direction.png" "${IMAGE_THUMB_BASE}-polar-direction.png" >> $NOAA_LOG 2>&1
-fi
-
 if [ -f "${RAMFS_AUDIO_BASE}.wav" ]; then
+
+  push_file_list=""
   #generate outputs
   spectrogram=0
   if [[ "${PRODUCE_SPECTROGRAM}" == "true" ]]; then
@@ -216,6 +188,7 @@ if [ -f "${RAMFS_AUDIO_BASE}.wav" ]; then
     pristine=1
     ${IMAGE_PROC_DIR}/noaa_pristine.sh "${RAMFS_AUDIO_BASE}.wav" "${IMAGE_FILE_BASE}-pristine.jpg" >> $NOAA_LOG 2>&1
     ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-pristine.jpg" "${IMAGE_THUMB_BASE}-pristine.jpg" >> $NOAA_LOG 2>&1
+    push_file_list="${push_file_list} ${IMAGE_FILE_BASE}-pristine.jpg"
   fi
 
   histogram=0
@@ -272,7 +245,6 @@ if [ -f "${RAMFS_AUDIO_BASE}.wav" ]; then
   # build images based on enhancements defined
   log "Normalizing and annotating NOAA images" "INFO"
   has_one_image=0
-  push_file_list=""
   for enhancement in $ENHANCEMENTS; do
     export ENHANCEMENT=$enhancement
     log "Decoding image" "INFO"
@@ -320,6 +292,61 @@ fi
 
 if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_BASE")*.jpg" -print -quit)" ]; then
 
+  polar_az_el=0
+  if [[ "${PRODUCE_POLAR_AZ_EL}" == "true" ]]; then
+    log "Producing polar graph of azimuth and elevation for pass" "INFO"
+    polar_az_el=1
+    epoch_end=$((EPOCH_START + CAPTURE_TIME))
+    ${IMAGE_PROC_DIR}/polar_plot.py "${SAT_NAME}" \
+                                    "${TLE_FILE}" \
+                                    $EPOCH_START \
+                                    $epoch_end \
+                                    $LAT \
+                                    $LON \
+                                    $SAT_MIN_ELEV \
+                                    $PASS_DIRECTION \
+                                    "${IMAGE_FILE_BASE}-polar-azel.jpg" \
+                                    "azel" >> $NOAA_LOG 2>&1
+    ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-polar-azel.jpg" "${IMAGE_THUMB_BASE}-polar-azel.jpg" >> $NOAA_LOG 2>&1
+  fi
+
+  polar_direction=0
+  if [[ "${PRODUCE_POLAR_DIRECTION}" == "true" ]]; then
+    log "Producing polar graph of direction for pass" "INFO"
+    polar_direction=1
+    epoch_end=$((EPOCH_START + CAPTURE_TIME))
+    ${IMAGE_PROC_DIR}/polar_plot.py "${SAT_NAME}" \
+                                    "${TLE_FILE}" \
+                                    $EPOCH_START \
+                                    $epoch_end \
+                                    $LAT \
+                                    $LON \
+                                    $SAT_MIN_ELEV \
+                                    $PASS_DIRECTION \
+                                    "${IMAGE_FILE_BASE}-polar-direction.png" \
+                                    "direction" >> $NOAA_LOG 2>&1
+    ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-polar-direction.png" "${IMAGE_THUMB_BASE}-polar-direction.png" >> $NOAA_LOG 2>&1
+  fi
+
+  $SQLITE3 $DB_FILE "INSERT OR REPLACE INTO decoded_passes (id, pass_start, file_path, daylight_pass, sat_type, has_spectrogram, has_pristine, has_polar_az_el, has_polar_direction, has_histogram, gain) \
+                                      VALUES ( \
+                                        (SELECT id FROM decoded_passes WHERE pass_start = $EPOCH_START), \
+                                        $EPOCH_START, \"$FILENAME_BASE\", $daylight, 1, $spectrogram, $pristine, $polar_az_el, $polar_direction, $histogram, $GAIN \
+                                      );" >> $NOAA_LOG 2>&1
+
+  pass_id=$($SQLITE3 $DB_FILE "SELECT id FROM decoded_passes ORDER BY id DESC LIMIT 1;") >> $NOAA_LOG 2>&1
+
+  $SQLITE3 $DB_FILE "UPDATE predict_passes \
+                    SET is_active = 0 \
+                    WHERE (predict_passes.pass_start) \
+                    IN ( \
+                      SELECT predict_passes.pass_start \
+                      FROM predict_passes \
+                      INNER JOIN decoded_passes \
+                      ON predict_passes.pass_start = decoded_passes.pass_start \
+                      WHERE decoded_passes.id = $pass_id \
+                    );" >> $NOAA_LOG 2>&1
+
   # determine if auto-gain is set - handles "0" and "0.0" floats
   gain=$GAIN
   if [ $(echo "$GAIN==0"|bc) -eq 1 ]; then
@@ -332,7 +359,7 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
   if [ "${GROUND_STATION_LOCATION}" != "" ]; then
     push_annotation="Ground Station: ${GROUND_STATION_LOCATION}\n"
   fi
-  push_annotation="${push_annotation}${SAT_NAME} ${enhancement} ${capture_start}"
+  push_annotation="${push_annotation}${SAT_NAME} ${capture_start}"
   push_annotation="${push_annotation} Max Elev: ${SAT_MAX_ELEVATION}° ${PASS_SIDE}"
   push_annotation="${push_annotation} Sun Elevation: ${SUN_ELEV}°"
   push_annotation="${push_annotation} Gain: ${gain}"
@@ -383,30 +410,11 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
       log "Pushing image enhancement $enhancement to Discord" "INFO"
       ${PUSH_PROC_DIR}/push_discord.sh "$DISCORD_NOAA_WEBHOOK" "$i" "${push_annotation}" >> $NOAA_LOG 2>&1
     done
-  fi 
+  fi
 else
     # If no matching images are found, there is no need to push images
     log "No images found - not pushing anywhere" "INFO"
 fi
-
-$SQLITE3 $DB_FILE "INSERT OR REPLACE INTO decoded_passes (id, pass_start, file_path, daylight_pass, sat_type, has_spectrogram, has_pristine, has_polar_az_el, has_polar_direction, has_histogram, gain) \
-                                    VALUES ( \
-                                      (SELECT id FROM decoded_passes WHERE pass_start = $EPOCH_START), \
-                                      $EPOCH_START, \"$FILENAME_BASE\", $daylight, 1, $spectrogram, $pristine, $polar_az_el, $polar_direction, $histogram, $GAIN \
-                                    );" >> $NOAA_LOG 2>&1
-
-pass_id=$($SQLITE3 $DB_FILE "SELECT id FROM decoded_passes ORDER BY id DESC LIMIT 1;") >> $NOAA_LOG 2>&1
-
-$SQLITE3 $DB_FILE "UPDATE predict_passes \
-                  SET is_active = 0 \
-                  WHERE (predict_passes.pass_start) \
-                  IN ( \
-                    SELECT predict_passes.pass_start \
-                    FROM predict_passes \
-                    INNER JOIN decoded_passes \
-                    ON predict_passes.pass_start = decoded_passes.pass_start \
-                    WHERE decoded_passes.id = $pass_id \
-                  );" >> $NOAA_LOG 2>&1
 
 # calculate and report total time for capture
 TIMER_END=$(date '+%s')
