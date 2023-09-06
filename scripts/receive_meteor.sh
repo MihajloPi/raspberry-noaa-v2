@@ -81,6 +81,12 @@ else
   gain_option="--general_gain"
 fi
 
+if [ "$BIAS_TEE" == "-T" ]; then
+    bias_tee_option="--bias"
+else
+    bias_tee_option=""
+fi
+
 # check if there is enough free memory to store pass on RAM
 FREE_MEMORY=$(free -m | grep Mem | awk '{print $7}')
 if [ "$FREE_MEMORY" -lt $METEOR_M2_MEMORY_THRESHOLD ]; then
@@ -155,7 +161,7 @@ elif [ "$METEOR_RECEIVER" == "satdump" ]; then
 
   # Set mode based on METEOR_80K_INTERLEAVING
   mode="$([[ "$METEOR_80K_INTERLEAVING" == "true" ]] && echo "_80k" || echo "")"
-  $SATDUMP live meteor_m2-x_lrpt$mode . --source $receiver --samplerate $samplerate --frequency "${METEOR_FREQ}e6" $gain_option $GAIN --timeout $CAPTURE_TIME --finish_processing >> $NOAA_LOG 2>&1
+  $SATDUMP live meteor_m2-x_lrpt$mode . --source $receiver --samplerate $samplerate --frequency "${METEOR_FREQ}e6" $gain_option $GAIN $bias_tee_option --timeout $CAPTURE_TIME --finish_processing >> $NOAA_LOG 2>&1
   rm satdump.logs meteor_m2-x_lrpt$mode.cadu dataset.json
 
   log "Waiting for files to close" "INFO"
@@ -194,7 +200,7 @@ if [[ "$METEOR_RECEIVER" == "rtl_fm" || "$METEOR_RECEIVER" == "gnuradio" ]]; the
     mv "$file" "$new_filename"
 
     ${IMAGE_PROC_DIR}/meteor_normalize_annotate.sh "$new_filename" "${IMAGE_FILE_BASE}-${new_filename%.jpg}.jpg" $METEOR_IMAGE_QUALITY >> $NOAA_LOG 2>&1
-    ${IMAGE_PROC_DIR}/thumbnail.sh 300 "$new_filename" "${IMAGE_THUMB_BASE}-${new_filename%.jpg}.jpg" >> $NOAA_LOG 2>&1
+    ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-${new_filename%.jpg}.jpg" "${IMAGE_THUMB_BASE}-${new_filename%.jpg}.jpg" >> $NOAA_LOG 2>&1
     rm "$new_filename"
     push_file_list="$push_file_list ${IMAGE_FILE_BASE}-${new_filename%.jpg}.jpg"
   done
@@ -246,7 +252,7 @@ elif [[ "$METEOR_RECEIVER" == "satdump" ]]; then
   
     log "Annotating images and creating thumbnails" "INFO"
     ${IMAGE_PROC_DIR}/meteor_normalize_annotate.sh "$path/MSU-MR/$new_name" "${IMAGE_FILE_BASE}-${new_name%.png}.jpg" $METEOR_IMAGE_QUALITY >> $NOAA_LOG 2>&1
-    ${IMAGE_PROC_DIR}/thumbnail.sh 300 "$path/MSU-MR/$new_name" "${IMAGE_THUMB_BASE}-${new_name%.png}.jpg" >> $NOAA_LOG 2>&1
+    ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-${new_name%.png}.jpg" "${IMAGE_THUMB_BASE}-${new_name%.png}.jpg" >> $NOAA_LOG 2>&1
     rm "$path/MSU-MR/$new_name" >> $NOAA_LOG 2>&1
     push_file_list="$push_file_list ${IMAGE_FILE_BASE}-${new_name%.png}.jpg"
   done
