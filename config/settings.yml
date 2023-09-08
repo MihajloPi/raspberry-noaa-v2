@@ -27,8 +27,8 @@ ntp_server: ''
 #   meteor_receiver - which receiver method to use (either 'rtl_fm' or 'gnuradio' or 'satdump')
 receiver_type: 'rtlsdr'
 
-noaa_receiver: 'gnuradio'
-meteor_receiver: 'satdump'
+noaa_receiver: 'rtl_fm'
+meteor_receiver: 'rtl_fm'
 
 # test settings when running test scripts
 #   test_gain - gain to use for scanner test scripts
@@ -59,32 +59,32 @@ noaa_15_sdr_device_id: 0
 noaa_15_freq_offset: 0
 noaa_15_enable_bias_tee: false
 noaa_15_gain: 29.7
-noaa_15_sun_min_elevation: 6
-noaa_15_sat_min_elevation: 30
+noaa_15_sun_min_elevation: 0
+noaa_15_sat_min_elevation: 10
 
 noaa_18_schedule: true
 noaa_18_sdr_device_id: 0
 noaa_18_freq_offset: 0
 noaa_18_enable_bias_tee: false
 noaa_18_gain: 29.7
-noaa_18_sun_min_elevation: 6
-noaa_18_sat_min_elevation: 30
+noaa_18_sun_min_elevation: 0
+noaa_18_sat_min_elevation: 10
 
 noaa_19_schedule: true
 noaa_19_sdr_device_id: 0
 noaa_19_freq_offset: 0
 noaa_19_enable_bias_tee: false
 noaa_19_gain: 29.7
-noaa_19_sun_min_elevation: 6
-noaa_19_sat_min_elevation: 30
+noaa_19_sun_min_elevation: 0
+noaa_19_sat_min_elevation: 10
 
 meteor_m2_schedule: true
 meteor_m2_sdr_device_id: 0
 meteor_m2_freq_offset: 0
 meteor_m2_enable_bias_tee: false
 meteor_m2_gain: 29.7
-meteor_m2_sun_min_elevation: 6
-meteor_m2_sat_min_elevation: 30
+meteor_m2_sun_min_elevation: 0
+meteor_m2_sat_min_elevation: 10
 meteor_80k_interleaving: false
 
 # how many days to schedule passes - note this MUST be an even integer,
@@ -95,13 +95,13 @@ meteor_80k_interleaving: false
 #       value, you must run the schedule script manually and pass the '-x' switch
 #       after re-running the ./install_and_upgrade.sh script to align the variables:
 #           ./scripts/schedule.sh -x
-days_to_schedule_passes: 7
+days_to_schedule_passes: 1
 
 # pruning capabilities - must be configured in cron (see documentation)
 #   delete_oldest_n - how many oldest captures to delete on each run
 #   delete_older_than_n - delete all images older than this many days
-delete_oldest_n: 0
-delete_older_than_n: 30
+delete_oldest_n: 3
+delete_older_than_n: 5
 
 # whether audio files should be deleted after images are created
 delete_noaa_audio: true
@@ -246,7 +246,7 @@ log_level: DEBUG
 # in the passes view - note that this iframe-driven visualization is
 # by default disabled on "extra-small" devices such as phones due to
 # the processing and space requirements
-enable_satvis: true
+enable_satvis: false
 
 # whether to enable the image video in the passes view - note that this
 # is by default disabled on "extra-small" devices such as phones due
@@ -276,7 +276,7 @@ disable_at_mail: false
 enable_email_push: false
 email_push_address: test@ifttt.com
 enable_email_schedule_push: false
-enable_discord_push: true
+enable_discord_push: false
 discord_noaa_webhook_url: 'https://discord.com/api/webhooks/1135901731918717068/ZELG3Sv1fRxQ8KgoYtMMOBYM07az0yIkzeLdad-8WxxhV-F8LhPQdZFFon044awMvLsD'
 discord_meteor_webhook_url: 'https://discord.com/api/webhooks/1135901731918717068/ZELG3Sv1fRxQ8KgoYtMMOBYM07az0yIkzeLdad-8WxxhV-F8LhPQdZFFon044awMvLsD'
 enable_twitter_push: false
