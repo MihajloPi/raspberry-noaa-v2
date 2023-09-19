@@ -4,7 +4,6 @@
     "latitude":              { "type": "number" },
     "longitude":             { "type": "number" },
     "altitude":              { "type": "number" },
-    "timezone_offset":       { "type": "number" },
     "ntp_server":            { "type": "string" },
     "test_gain":             { "type": "number" },
     "test_sdr_device_id":    { "type": "number" },
@@ -18,6 +17,7 @@
       "type": "string"
     },
     "select_best_overlapping_passes": { "type": "boolean" },
+    "select_meteor_pass_over_noaa":   { "type": "boolean" },
     "noaa_15_schedule":        { "type": "boolean" },
     "noaa_15_sdr_device_id":   { "type": "number" },
     "noaa_15_freq_offset":     { "type": "number" },
@@ -63,24 +63,24 @@
       "minimum": 0,
       "maximum": 90
     },
-    "meteor_m2_schedule":        { "type": "boolean" },
-    "meteor_m2_sdr_device_id":   { "type": "number" },
-    "meteor_m2_freq_offset":     { "type": "number" },
-    "meteor_m2_enable_bias_tee": { "type": "boolean" },
-    "meteor_m2_gain":            { "type": "number" },
-    "meteor_m2_sun_min_elevation": {
+    "meteor_m2_3_schedule":        { "type": "boolean" },
+    "meteor_m2_3_sdr_device_id":   { "type": "number" },
+    "meteor_m2_3_freq_offset":     { "type": "number" },
+    "meteor_m2_3_enable_bias_tee": { "type": "boolean" },
+    "meteor_m2_3_gain":            { "type": "number" },
+    "meteor_m2_3_sun_min_elevation": {
       "type": "number",
       "minimum": -90,
       "maximum": 90
     },
-    "meteor_m2_sat_min_elevation": {
+    "meteor_m2_3_sat_min_elevation": {
       "type": "number",
       "minimum": 0,
       "maximum": 90
     },
     "noaa_memory_threshold":           { "type": "number" },
     "meteor_m2_memory_threshold":      { "type": "number" },
-    "meteor_80k_interleaving":         { "type": "boolean" },
+    "meteor_m2_3_80k_interleaving":         { "type": "boolean" },
     "days_to_schedule_passes":         { "type": "number" },
     "delete_audio":                    { "type": "boolean" },
     "flip_meteor_image":               { "type": "boolean" },
@@ -137,10 +137,9 @@
     "noaa_thermal_temp_overlay_location": {
       "type": "string"
     },
-    "timezone":                                      { "type": "string" },
     "lang_setting": {
       "type": "string",
-      "enum": [ "ar", "bg", "cn", "de", "en", "es", "fr", "lt", "nl", "pt", "sr", "ru", "it" ]
+      "enum": [ "ar", "bg", "cn", "de", "en", "es", "fr", "lt", "nl", "pt", "sr", "ru", "it", "hu" ]
     },
     "web_server_name": { "type": "string" },
     "enable_non_tls":  { "type": "boolean" },
@@ -193,7 +192,6 @@
     "latitude",
     "longitude",
     "altitude",
-    "timezone_offset",
     "ntp_server",
     "test_gain",
     "test_sdr_device_id",
@@ -221,13 +219,13 @@
     "noaa_19_gain",
     "noaa_19_sun_min_elevation",
     "noaa_19_sat_min_elevation",
-    "meteor_m2_schedule",
-    "meteor_m2_sdr_device_id",
-    "meteor_m2_freq_offset",
-    "meteor_m2_enable_bias_tee",
-    "meteor_m2_gain",
-    "meteor_m2_sun_min_elevation",
-    "meteor_m2_sat_min_elevation",
+    "meteor_m2_3_schedule",
+    "meteor_m2_3_sdr_device_id",
+    "meteor_m2_3_freq_offset",
+    "meteor_m2_3_enable_bias_tee",
+    "meteor_m2_3_gain",
+    "meteor_m2_3_sun_min_elevation",
+    "meteor_m2_3_sat_min_elevation",
     "meteor_m2_memory_threshold",
     "days_to_schedule_passes",
     "delete_noaa_audio",
@@ -262,7 +260,6 @@
     "noaa_map_state_border_color",
     "noaa_thermal_temp_overlay",
     "noaa_thermal_temp_overlay_location",
-    "timezone",
     "lang_setting",
     "web_server_name",
     "enable_non_tls",

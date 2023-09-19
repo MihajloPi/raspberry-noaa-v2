@@ -101,7 +101,7 @@ if [ $extend_annotation -eq 1 ]; then
     gravity_var="North"
   fi
 
-  $CONVERT -quality 100 -colorspace RGB \
+  $CONVERT -interlace Line -quality 100 -colorspace RGB \
            -format jpg "${next_in}" \
            -gravity "${gravity_var}" \
            -background black \
@@ -111,7 +111,7 @@ if [ $extend_annotation -eq 1 ]; then
 fi
 
 # generate final image with annotation
-$CONVERT -quality $QUALITY -colorspace RGB \
+$CONVERT -interlace Line -quality $QUALITY -colorspace RGB \
          -format jpg "${next_in}" "${tmp_dir}/annotation.png" \
          -gravity $IMAGE_ANNOTATION_LOCATION \
          -geometry $geometry \
