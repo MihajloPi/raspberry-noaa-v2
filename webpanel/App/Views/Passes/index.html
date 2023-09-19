@@ -16,12 +16,8 @@
 
     {% if constant('Config\\Config::ENABLE_ANIMATION') == 'true' %}
       <div id="noaa-animation" class="d-none d-sm-block flex-child">
-	<div><video playsinline autoplay muted loop controls src="/srv/videos/RollingAnimationNOAA.webm" width="100%" height="100%" type="video/webm; codecs=vp9"></video></div>
+	<div><video playsinline autoplay muted loop controls src="{{ constant('Config\\Config::ANIMATION_VIDEO_FILE') }}" width="100%" height="100%" type="video/webm; codecs=vp9"></video></div>
       </div>
-
-<!--      <div id="noaa-animation" class="d-none d-sm-block flex-child">
-        <div><video playsinline autoplay muted loop controls src="{{ constant('Config\\Config::ANIMATION_VIDEO_FILE') }}" width="100%" height="100%" type="video/webm; codecs=vp9"></video></div>
-      </div>  -->
     {% endif %}
   </div>
 <!--  <br><br><center><h1><strong>Artemis 1 Livestream from the Moon</strong></h1></center><br>  -->
