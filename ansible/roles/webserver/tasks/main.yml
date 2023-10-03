@@ -29,11 +29,6 @@
     state: present
   when: raspbian_version.stdout == 'buster'
 
-- name: install the package, force upgrade
-  pip: 
-    name: numpy
-    extra_args: --upgrade
-
 - name: install UFW firewall
   become: yes
   apt:
