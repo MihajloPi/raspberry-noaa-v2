@@ -39,13 +39,13 @@ server {
   }
 
   location /upload {
-      client_max_body_size 1024M; # Set the maximum file size to 1 GB
+    client_max_body_size 1024M; # Set the maximum file size to 1 GB
 
-      # Automatically rewrite the URL to /srv/audio
-      rewrite ^/upload(.*)$ /srv/audio$1 last;
+    # Use alias to map the URL to /srv/audio
+    alias /srv/audio/;
 
-      # You can customize this line as per your requirements
-      try_files $uri $uri/ =404;
+    # You can customize this line as per your requirements
+    try_files $uri $uri/ =404;
   }
 
   location / {
