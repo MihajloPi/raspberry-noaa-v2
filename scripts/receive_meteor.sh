@@ -168,13 +168,14 @@ elif [ "$METEOR_RECEIVER" == "gnuradio" ]; then
 elif [ "$METEOR_RECEIVER" == "satdump_record" ]; then
   log "Recording ${NOAA_HOME} via $receiver at ${METEOR_M2_3_FREQ} MHz using SatDump record " "INFO"
   $SATDUMP record "${RAMFS_AUDIO_BASE}" --source $receiver --baseband_format w16 --samplerate $samplerate --decimation $decimation --frequency "${METEOR_M2_3_FREQ}e6" $gain_option $GAIN $bias_tee_option --timeout $CAPTURE_TIME >> $NOAA_LOG 2>&1
+  rm satdump.log dataset.json
 elif [ "$METEOR_RECEIVER" == "satdump_live" ]; then
   log "Starting SatDump live recording and decoding" "INFO"
 
   # Set mode based on METEOR_M2_3_80K_INTERLEAVING
   mode="$([[ "$METEOR_${SAT_NUMBER}_80K_INTERLEAVING" == "true" ]] && echo "_80k" || echo "")"
   $SATDUMP live meteor_m2-x_lrpt${mode} . --source $receiver --samplerate $samplerate --frequency "${METEOR_M2_3_FREQ}e6" $gain_option $GAIN $bias_tee_option --timeout $CAPTURE_TIME --finish_processing >> $NOAA_LOG 2>&1
-  rm satdump.logs dataset.json
+  rm satdump.log dataset.json
 
   log "Waiting for files to close" "INFO"
   sleep 2
@@ -185,6 +186,9 @@ fi
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 if [[ "$METEOR_RECEIVER" == "rtl_fm" || "$METEOR_RECEIVER" == "gnuradio" || "$METEOR_RECEIVER" == "satdump_record" ]]; then
+  log "Removing old bmp and gcp files" "INFO"
+  find /srv/audio/meteor -type f \( -name "*.gcp" -o -name "*.bmp" \) -mtime +1 -delete >> $NOAA_LOG 2>&1
+
   if [[ "${PRODUCE_SPECTROGRAM}" == "true" ]]; then
     log "Producing spectrogram" "INFO"
     spectrogram=1
@@ -207,7 +211,7 @@ if [[ "$METEOR_RECEIVER" == "rtl_fm" || "$METEOR_RECEIVER" == "gnuradio" || "$ME
   done
 
   for file in *.jpg; do
-    new_filename=$(echo "$file" | sed -E 's/_[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+\.jpg$/.jpg/')        #This part removes unecessary numbers from the MeteorDemod image names using RegEx
+    new_filename=$(echo "$file" | sed -E 's/_([0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+)//')        #This part removes unecessary numbers from the MeteorDemod image names using RegEx
     mv "$file" "$new_filename"
 
     ${IMAGE_PROC_DIR}/meteor_normalize_annotate.sh "$new_filename" "${IMAGE_FILE_BASE}-${new_filename%.jpg}.jpg" $METEOR_IMAGE_QUALITY >> $NOAA_LOG 2>&1
@@ -284,7 +288,7 @@ elif [[ "$METEOR_RECEIVER" == "satdump_live" ]]; then
   else
     if [ "$in_mem" == "true" ]; then
       log "Moving CADU files out to the SD card" "INFO"
-      mv meteor_m2-x_lrpt${mode}.cadu "${AUDIO_FILE_BASE}-meteor_m2-x_lrpt${mode}.cadu" >> $NOAA_LOG 2>&1
+      mv meteor_m2-x_lrpt${mode}.cadu "${AUDIO_FILE_BASE}.cadu" >> $NOAA_LOG 2>&1
       log "Deleting Meteor audio files older than $FILES_OLDER_THAN_DAYS days" "INFO"
       find /srv/audio/meteor -type f \( -name "*.wav" -o -name "*.s" -o -name "*.cadu" -o -name "*.gcp" -o -name "*.bmp" \) -mtime +${FILES_OLDER_THAN_DAYS} -delete >> $NOAA_LOG 2>&1
     fi
