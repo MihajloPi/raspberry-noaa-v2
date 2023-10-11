@@ -21,6 +21,7 @@
       - libgles-dev
       - libegl-dev
       - libatlas-base-dev
+      - libopenblas-base
       - libgfortran5
       - libjpeg-dev
       - libncurses5-dev
@@ -39,22 +40,14 @@
       - zlib1g-dev
       - libsqlite3-dev
       - python3-dev
-      - python3-pip
       - cmake
       - build-essential
       - pkg-config
       - git
-      - libatlas-base-dev
       - liblapacke-dev
       - gfortran
       - libopencv-dev
       - python3-opencv
-
-- name: Ensure pip3 is installed
-  become: yes
-  apt:
-    name: python3-pip
-    state: present
 
 - name: Install required Python packages using pip3
   pip:
@@ -167,7 +160,7 @@
 - name: Installing SatDump
   become: yes
   apt:
-    deb: "{{ noaa_home }}/software/satdump_1.1.1-ddb3434a_{{ system_architecture }}.deb"
+    deb: "{{ noaa_home }}/software/satdump_1.1.1-c1756be9_{{ system_architecture }}.deb"
     state: present
     update_cache: no
 
