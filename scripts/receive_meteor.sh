@@ -167,10 +167,10 @@ if [ "$RECEPTION_TYPE" == "record" ]; then
       $METEORDEMOD -m oqpsk -diff 1 -s 72000 -sat METEOR-M-2-3 -t "$TLE_FILE" -f jpg -i "${RAMFS_AUDIO_BASE}.wav" >> $NOAA_LOG 2>&1
     fi
 
-    rm "${RAMFS_AUDIO_BASE}.s"
-
     log "Waiting for files to close" "INFO"
     sleep 2
+    
+    rm "${RAMFS_AUDIO_BASE}.s"
 
     for i in spread_*.jpg; do
       $CONVERT -quality 100 $FLIP "$i" "$i" >> $NOAA_LOG 2>&1
@@ -209,6 +209,10 @@ if [ "$RECEPTION_TYPE" == "record" ]; then
   elif [[ "$METEOR_DECODER" == "satdump" ]]; then
 
     $SATDUMP meteor_m2-x_lrpt${mode} baseband "${RAMFS_AUDIO_BASE}.wav" . --samplerate $samplerate --baseband_format w16 >> $NOAA_LOG 2>&1
+
+    log "Waiting for files to close" "INFO"
+    sleep 2
+
     rm satdump.log dataset.json
 
     find MSU-MR/ -type f ! -name "*projected*" ! -name "*corrected*" -delete
