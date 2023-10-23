@@ -285,10 +285,10 @@
     name: nginx
     state: started
 
-- name: www-data sudoers atrm as pi user
+- name: www-data sudoers atrm as the current user
   become: yes
-  copy:
-    src: 020_www-data-atrm-nopasswd
+  template:
+    src: 020_www-data-atrm-nopasswd.j2
     dest: /etc/sudoers.d/020_www-data-atrm-nopasswd
     owner: root
     group: root
