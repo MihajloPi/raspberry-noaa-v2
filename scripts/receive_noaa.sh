@@ -178,9 +178,9 @@ if [ "$NOAA_DECODER" == "wxtoimg" ]; then
   if [[ "${PRODUCE_NOAA_PRISTINE}" == "true" ]]; then
     log "Producing pristine image" "INFO"
     pristine=1
-    ${IMAGE_PROC_DIR}/noaa_pristine.sh "${RAMFS_AUDIO_BASE}.wav" "${IMAGE_FILE_BASE}-pristine.jpg" >> $NOAA_LOG 2>&1
-    ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-pristine.jpg" "${IMAGE_THUMB_BASE}-pristine.jpg" >> $NOAA_LOG 2>&1
-    push_file_list="${push_file_list} ${IMAGE_FILE_BASE}-pristine.jpg"
+    ${IMAGE_PROC_DIR}/noaa_pristine.sh "${RAMFS_AUDIO_BASE}.wav" "${IMAGE_FILE_BASE}-pristine.png" >> $NOAA_LOG 2>&1
+    ${IMAGE_PROC_DIR}/thumbnail.sh 300 "${IMAGE_FILE_BASE}-pristine.png" "${IMAGE_THUMB_BASE}-pristine.png" >> $NOAA_LOG 2>&1
+    push_file_list="${push_file_list} ${IMAGE_FILE_BASE}-pristine.png"
   fi
 
   histogram=0
@@ -267,7 +267,7 @@ if [ "$NOAA_DECODER" == "wxtoimg" ]; then
     fi
   fi
 elif [ "$NOAA_DECODER" == "satdump" ]; then
-  $SATDUMP noaa_apt wav "${RAMFS_AUDIO_BASE}.wav" . --samplerate $samplerate --baseband_format w16 --satellite_number ${SAT_NUMBER} --start_timestamp $PASS_START >> $NOAA_LOG 2>&1
+  $SATDUMP noaa_apt audio_wav "${RAMFS_AUDIO_BASE}.wav" . --satellite_number ${SAT_NUMBER} --start_timestamp $PASS_START >> $NOAA_LOG 2>&1
   rm satdump.log noaa_apt.wav product.cbor
   spectrogram=0
   pristine=0
