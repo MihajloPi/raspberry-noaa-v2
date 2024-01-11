@@ -140,6 +140,12 @@ if [ "$PASS_DIRECTION" == "Northbound" ]; then
   FLIP="-rotate 180"
 fi
 
+$crop_topbottom=""
+if [ "$NOAA_CROP_TOPTOBOTTOM" == "true" ]; then
+  log "Cropping SatDump NOAA images enabled" "INFO"
+  $crop_topbottom="--autocrop_wedges"
+fi
+
 # pass start timestamp and sun elevation
 PASS_START=$(expr "$EPOCH_START" + 90)
 export SUN_ELEV=$(python3 "$SCRIPTS_DIR"/tools/sun.py "$PASS_START")
@@ -272,8 +278,19 @@ elif [ "$NOAA_DECODER" == "satdump" ]; then
   $SOX "$audio_temporary_storage_directory/noaa_apt.wav" -r 11025 "${RAMFS_AUDIO_BASE}.wav" >> $NOAA_LOG 2>&1
   rm "$audio_temporary_storage_directory/satdump.log" "$audio_temporary_storage_directory/noaa_apt.wav" >> $NOAA_LOG 2>&1
 
-  $SATDUMP noaa_apt audio_wav "${RAMFS_AUDIO_BASE}.wav" . --satellite_number ${SAT_NUMBER} --start_timestamp $PASS_START >> $NOAA_LOG 2>&1
+  log "Converting PASS_START to an integer from string: $PASS_START" "INFO"
+  PASS_START=$(($PASS_START)) >> $NOAA_LOG 2>&1
+  log "Converted PASS_START to an integer: $PASS_START" "INFO"
+  log "Converting SATDUMP_MAP_OFFSET to a number from string: $SATDUMP_MAP_OFFSET" "INFO"
+  SATDUMP_MAP_OFFSET=$(echo "$SATDUMP_MAP_OFFSET" | bc) >> $NOAA_LOG 2>&1
+  log "Converted SATDUMP_MAP_OFFSET to a number: $SATDUMP_MAP_OFFSET" "INFO"
+  log "Before calculating START_TIMESTAMP"
+  START_TIMESTAMP=$(echo "$PASS_START + $SATDUMP_MAP_OFFSET" | bc) >> $NOAA_LOG 2>&1
+  log "After calculating START_TIMESTAMP = $START_TIMESTAMP"
+  $SATDUMP noaa_apt audio_wav "${RAMFS_AUDIO_BASE}.wav" . --satellite_number ${SAT_NUMBER} $crop_topbottom --start_timestamp $START_TIMESTAMP >> $NOAA_LOG 2>&1
+  log "After running SatDump for decoding NOAA passes with calculated START_TIMESTAMP"
   rm satdump.log noaa_apt.wav product.cbor
+
   spectrogram=0
   pristine=0
   histogram=0
