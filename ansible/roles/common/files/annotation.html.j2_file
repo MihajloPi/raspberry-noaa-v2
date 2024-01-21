@@ -35,6 +35,7 @@
           <center>
             Ground Station: {{ ground_station_location }}<br>
             Antenna: {{ antenna_information }}<br>
+            Receiver: {{ receiver_type }}<br>
             Satellite: {{ sat_name }} | {{ capture_start }}<br>
             Max Elevation: {{ sat_max_elevation }}&#176; {{ pass_side_long }} | Sun Elevation: {{ sun_elevation }}&#176; <br>
             Direction: {{ pass_direction }} | {{ enhancement }} | Gain: {{ gain }}
