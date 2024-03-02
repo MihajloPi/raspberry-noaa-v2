@@ -126,6 +126,50 @@
     group: www-data
     mode: 0644
 
+- name: update images directory group
+  become: yes
+  file:
+    path: "{{ images_output }}"
+    state: directory
+    group: www-data
+
+- name: update thumbnails directory group
+  become: yes
+  file:
+    path: "{{ images_output }}/thumb"
+    state: directory
+    group: www-data
+
+- name: update videos directory group
+  become: yes
+  file:
+    path: "{{ videos_output }}"
+    state: directory
+    group: www-data
+
+- name: update database folder permissions
+  become: yes
+  file:
+    path: "{{ noaa_home }}/db"
+    group: www-data
+    mode: 0770
+
+- name: update database file permissions
+  become: yes
+  file:
+    path: "{{ noaa_home }}/db/panel.db"
+    group: www-data
+    mode: 0770
+
+- name: www-data sudoers atrm as superuser
+  become: yes
+  copy:
+    src: 020_www-data-atrm-nopasswd
+    dest: /etc/sudoers.d/020_www-data-atrm-nopasswd
+    owner: root
+    group: root
+    mode: 0440
+
 - name: nginx config file
   become: yes
   template:
@@ -183,41 +227,6 @@
     state: absent
   when: not enable_non_tls|bool
   notify: restart nginx
-
-- name: update images directory group
-  become: yes
-  file:
-    path: "{{ images_output }}"
-    state: directory
-    group: www-data
-
-- name: update thumbnails directory group
-  become: yes
-  file:
-    path: "{{ images_output }}/thumb"
-    state: directory
-    group: www-data
-
-- name: update videos directory group
-  become: yes
-  file:
-    path: "{{ videos_output }}"
-    state: directory
-    group: www-data
-
-- name: update database folder permissions
-  become: yes
-  file:
-    path: "{{ noaa_home }}/db"
-    group: www-data
-    mode: 0770
-
-- name: update database file permissions
-  become: yes
-  file:
-    path: "{{ noaa_home }}/db/panel.db"
-    group: www-data
-    mode: 0770
 
 - name: nginx tls config file
   become: yes
@@ -284,13 +293,4 @@
   service:
     name: nginx
     state: started
-
-- name: www-data sudoers atrm as superuser
-  become: yes
-  copy:
-    src: 020_www-data-atrm-nopasswd
-    dest: /etc/sudoers.d/020_www-data-atrm-nopasswd
-    owner: root
-    group: root
-    mode: 0440
 ...
