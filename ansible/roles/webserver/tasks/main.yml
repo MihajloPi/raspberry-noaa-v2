@@ -182,7 +182,6 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart nginx
 
 - name: nginx www config file
   become: yes
@@ -192,7 +191,6 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart nginx
 
 - name: nginx non-tls config symlink
   become: yes
@@ -203,7 +201,6 @@
     owner: root
     group: root
   when: enable_non_tls|bool
-  notify: restart nginx
 
 - name: nginx www non-tls config symlink
   become: yes
@@ -214,7 +211,6 @@
     owner: root
     group: root
   when: enable_non_tls|bool
-  notify: restart nginx
 
 - name: remove non-tls site enable if disabled
   become: yes
@@ -222,7 +218,6 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
   when: not enable_non_tls|bool
-  notify: restart nginx
 
 - name: remove www non-tls site enable if disabled
   become: yes
@@ -230,7 +225,6 @@
     path: /etc/nginx/sites-enabled/www-default
     state: absent
   when: not enable_non_tls|bool
-  notify: restart nginx
 
 - name: nginx tls config file
   become: yes
@@ -241,7 +235,6 @@
     group: root
     mode: 0644
   when: enable_tls|bool
-  notify: restart nginx
 
 - name: nginx www tls config file
   become: yes
@@ -252,7 +245,6 @@
     group: root
     mode: 0644
   when: enable_tls|bool
-  notify: restart nginx
 
 - name: nginx tls config symlink
   become: yes
@@ -263,7 +255,6 @@
     owner: root
     group: root
   when: enable_tls|bool
-  notify: restart nginx
 
 - name: nginx www tls config symlink
   become: yes
@@ -274,7 +265,6 @@
     owner: root
     group: root
   when: enable_tls|bool
-  notify: restart nginx
 
 - name: remove tls site enable if disabled
   become: yes
@@ -282,7 +272,6 @@
     path: /etc/nginx/sites-enabled/default-tls
     state: absent
   when: not enable_tls|bool
-  notify: restart nginx
 
 - name: remove www tls site enable if disabled
   become: yes
@@ -290,7 +279,12 @@
     path: /etc/nginx/sites-enabled/www-default-tls
     state: absent
   when: not enable_tls|bool
-  notify: restart nginx
+
+- name: restart nginx
+  become: yes
+  service:
+    name: nginx
+    state: restarted
 
 - name: ensure nginx is running
   become: yes
