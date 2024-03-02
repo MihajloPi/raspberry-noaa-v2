@@ -170,6 +170,10 @@
     group: root
     mode: 0440
 
+- name: Enable the UFW firewall
+  become: yes
+  command: ufw enable
+
 - name: nginx config file
   become: yes
   template:
