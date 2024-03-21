@@ -280,6 +280,12 @@
     state: absent
   when: not enable_tls|bool
 
+- name: Delete /var/run/tor-website.sock file to prevent issues when restarting the Nginx server
+  become: yes
+  file:
+    path: /var/run/tor-website.sock
+    state: absent
+
 - name: restart nginx
   become: yes
   service:
