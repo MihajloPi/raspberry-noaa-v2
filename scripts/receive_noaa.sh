@@ -163,7 +163,7 @@ daylight=$((SUN_ELEV > SUN_MIN_ELEV ? 1 : 0))
 log "Recording ${NOAA_HOME} via ${RECEIVER_TYPE} at ${freq} MHz via SatDump live pipeline" "INFO"
 audio_temporary_storage_directory="$(dirname "${RAMFS_FILE_BASE}")"
 $SATDUMP live noaa_apt $audio_temporary_storage_directory --source $receiver --samplerate $samplerate --frequency "${NOAA_FREQUENCY}e6" --satellite_number ${SAT_NUMBER} --sdrpp_noise_reduction $gain_option $GAIN $bias_tee_option $crop_topbottom --start_timestamp $PASS_START $finish_processing --timeout $CAPTURE_TIME >> $NOAA_LOG 2>&1
-rm "$audio_temporary_storage_directory/dataset.json" "$audio_temporary_storage_directory/product.cbor" >> $NOAA_LOG 2>&1 
+rm "$audio_temporary_storage_directory/dataset.json" "$audio_temporary_storage_directory/product.cbor" >> $NOAA_LOG 2>&1
 log "Files recorded" "INFO"
 
 if [ "${CONTRIBUTE_TO_COMMUNITY_COMPOSITES}" == "true" ]; then
@@ -444,22 +444,23 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
   # handle Slack pushing if enabled
   if [ "${ENABLE_SLACK_PUSH}" == "true" ]; then
     pass_id=$($SQLITE3 $DB_FILE "SELECT id FROM decoded_passes ORDER BY id DESC LIMIT 1;")
-    ${PUSH_PROC_DIR}/push_slack.sh "${push_annotation} <${SLACK_LINK}?pass_id=${pass_id}>\n" $push_file_list
+    ${PUSH_PROC_DIR}/push_slack.sh "${push_annotation} <${SLACK_LINK}?pass_id=${pass_id}>\n" $push_file_list >> $NOAA_LOG 2>&1
   fi
   # handle Twitter pushing if enabled
   if [ "${ENABLE_TWITTER_PUSH}" == "true" ]; then
     log "Pushing image enhancements to Twitter" "INFO"
-    ${PUSH_PROC_DIR}/push_twitter.sh "${push_annotation}" $push_file_list
+    ${PUSH_PROC_DIR}/push_twitter.sh "${push_annotation}" $push_file_list >> $NOAA_LOG 2>&1
   fi
   # handle Mastodon pushing if enabled
   if [ "${ENABLE_MASTODON_PUSH}" == "true" ]; then
     log "Pushing image enhancements to Mastodon" "INFO"
-    ${PUSH_PROC_DIR}/push_mastodon.py "${push_annotation}" "${push_file_list}"
+    echo -e "${PUSH_PROC_DIR}/push_mastodon.py \"${push_annotation}\" ${push_file_list}"
+    ${PUSH_PROC_DIR}/push_mastodon.py "${push_annotation}" ${push_file_list} >> $NOAA_LOG 2>&1
   fi
   # handle Facebook pushing if enabled
   if [ "${ENABLE_FACEBOOK_PUSH}" == "true" ]; then
     log "Pushing image enhancements to Facebook" "INFO"
-    ${PUSH_PROC_DIR}/push_facebook.py "${push_annotation}" "${push_file_list}"
+    ${PUSH_PROC_DIR}/push_facebook.py "${push_annotation}" "${push_file_list}" >> $NOAA_LOG 2>&1
   fi
   # handle Instagram pushing if enabled
   if [ "${ENABLE_INSTAGRAM_PUSH}" == "true" ]; then
@@ -469,13 +470,13 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
       $CONVERT +append "${IMAGE_FILE_BASE}-MCIR.jpg" "${IMAGE_FILE_BASE}-MCIR-precip.jpg" "${IMAGE_FILE_BASE}-instagram.jpg"
     fi
     log "Pushing image enhancements to Instagram" "INFO"
-    ${PUSH_PROC_DIR}/push_instagram.py "${push_annotation}" $(sed 's|/srv/images/||' <<< "${IMAGE_FILE_BASE}-instagram.jpg") ${WEB_SERVER_NAME}
+    ${PUSH_PROC_DIR}/push_instagram.py "${push_annotation}" $(sed 's|/srv/images/||' <<< "${IMAGE_FILE_BASE}-instagram.jpg") ${WEB_SERVER_NAME} >> $NOAA_LOG 2>&1
     rm "${IMAGE_FILE_BASE}-instagram.jpg"
   fi
   # handle Matrix pushing if enabled
   if [ "${ENABLE_MATRIX_PUSH}" == "true" ]; then
     log "Pushing image enhancements to Matrix" "INFO"
-    ${PUSH_PROC_DIR}/push_matrix.sh "${push_annotation}" $push_file_list
+    ${PUSH_PROC_DIR}/push_matrix.sh "${push_annotation}" $push_file_list >> $NOAA_LOG 2>&1
   fi
   if [ "${ENABLE_EMAIL_PUSH}" == "true" ]; then
     IFS=' ' read -ra image_file_array <<< "$push_file_list"
