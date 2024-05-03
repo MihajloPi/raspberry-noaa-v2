@@ -11,8 +11,6 @@
       - cmake
       - ffmpeg
       - gmic
-      - gnuradio
-      - gr-osmosdr
       - airspy
       - hackrf
       - imagemagick
