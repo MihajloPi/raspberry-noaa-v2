@@ -8,7 +8,7 @@ altitude: 0.0
 
 #Website language settings
 #   lang_setting: see the 'webpanel/App/Lang' folder for available
-#                 languages (2-letter filename - e.g. ar, bg, de, en, es, nl, sr, ru, it, hu, gr)
+#                 languages (2-letter filename - e.g. ar, bg, de, en, es, nl, sr, ru, it, hu, gr, lt)
 lang_setting: en
 
 # ntp configurations
@@ -17,7 +17,7 @@ lang_setting: en
 ntp_server: ''
 
 # receiver settings
-#   receiver_type - the receiver type which program uses ('rtlsdr', 'airspy_mini', 'airspy_r2' or 'hackrf' or 'sdrplay' or 'mirisdr')
+#   receiver_type - the receiver type which program uses ('rtlsdr', 'airspy_mini', 'airspy_r2', 'airspy_hf_plus_discovery', 'hackrf', 'sdrplay' or 'mirisdr')
 #   noaa_decoder - which receiver method to use (either 'wxtoimg' or 'satdump')
 #   meteor_decoder - which receiver method to use (either 'meteordemod' or 'satdump')
 receiver_type: 'rtlsdr'
@@ -45,8 +45,8 @@ test_freq_offset: 0
 #   <satellite_name>_sat_min_elevation - threshold for sat elevation for specific satellite captures
 #   <satellite_name>_memory_threshold - for METEOR satellite, minimum free memory (MB) required to store pass in RAM
 
-noaa_memory_threshold: 100
-meteor_m2_memory_threshold: 200
+noaa_memory_threshold: 50
+meteor_m2_memory_threshold: 10
 
 select_best_overlapping_passes: true
 select_meteor_pass_over_noaa: true
@@ -80,8 +80,8 @@ meteor_m2_3_sdr_device_id: 0
 meteor_m2_3_freq_offset: 0
 meteor_m2_3_enable_bias_tee: false
 meteor_m2_3_gain: 29.7
-meteor_m2_3_sun_min_elevation: 6
 meteor_m2_3_schedule_sun_min_elevation: -6
+meteor_m2_3_sun_min_elevation: 6
 meteor_m2_3_sat_min_elevation: 30
 meteor_m2_3_80k_interleaving: false
 
@@ -202,7 +202,7 @@ noaa_map_country_border_enable: true
 noaa_map_country_border_color: "0xffff00"
 noaa_map_state_border_enable: true
 noaa_map_state_border_color: "0xffff00"
-wxtoimg_map_offset: 10.5                                        #Change this value only if you see map offsets from the ground on WXtoImg NOAA images
+wxtoimg_map_offset: 10.5                    #Change this value only if you see map offsets from the ground on WXtoImg NOAA images
 
 flip_meteor_image: true
 meteor_jpg_image_quality: 90

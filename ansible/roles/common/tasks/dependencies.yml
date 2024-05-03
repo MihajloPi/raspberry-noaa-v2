@@ -24,6 +24,7 @@
       - libopenblas-dev
       - libgfortran5
       - libjpeg-dev
+      - libtiff-dev
       - libncurses5-dev
       - libncursesw5-dev
       - libsox-fmt-mp3
@@ -31,6 +32,7 @@
       - libusb-1.0-0-dev
       - libxft-dev
       - libxft2
+      - libvolk2-dev
       - python3-setuptools
       - python3-idna
       - python3-jsonschema
@@ -137,16 +139,19 @@
 #    name:
 #      - intel-opencl-icd
 
-- name: Install required Python packages using pip3
-  pip:
-    name:
-      - envbash==1.2.0
-      - facebook-sdk==3.1.0
-      - pysqlite3==0.5.1
-    state: present
-    executable: pip3
+#- name: Install required Python packages using pip3
+#  pip:
+#    name:
+#      - envbash==1.2.0
+#      - facebook-sdk==3.1.0
+#      - pysqlite3==0.5.1
+#    state: present
+#    executable: pip3
 
-- name: Installing predict on computers
+- name: Install required Python packages using pip3 since they aren't available among the apt packages
+  command: pip3 install envbash==1.2.0 facebook-sdk==3.1.0 pysqlite3==0.5.1 --break-system-packages
+
+- name: Installing predict on PCs
   become: yes
   apt:
     deb: "{{ noaa_home }}/software/predict_2.2.3-4-b2_amd64.deb"

@@ -17,6 +17,6 @@
 # ramfs setup
 - include: ramfs.yml
 
-# social media
+#social media and email
 - include: social_media.yml
 ...
