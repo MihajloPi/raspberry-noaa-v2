@@ -1,12 +1,11 @@
 server {
-  listen {{ web_tls_port }};
-  # Enabling IPv6 support making the server accessible from the internet
-  listen [::]:{{ web_tls_port }};
+  listen {{ web_tls_port }} http2;
+  listen [::]:{{ web_tls_port }} http2;
 
   ssl on;
-  ssl_certificate {{ tls_cert }};
-  ssl_certificate_key {{ tls_cert_key }};
-  ssl_trusted_certificate {{ tls_trusted_certificate }};
+  ssl_certificate {{ www_tls_cert }};
+  ssl_certificate_key {{ www_tls_cert_key }};
+  ssl_trusted_certificate {{ www_tls_trusted_certificate }};
 
   ssl_protocols TLSv1.2 TLSv1.3;
   ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
@@ -18,7 +17,7 @@ server {
   index index.php index.html index.htm index.nginx-debian.html;
   autoindex on;
 
-  server_name {{ web_server_name }};
+  server_name www.{{ web_server_name }};
 
   gzip on;
   gzip_vary on;
@@ -54,7 +53,7 @@ server {
 
   location ~ \.php$ {
     include snippets/fastcgi-php.conf;
-    fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+    fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
   }
 
   # Rewrite the old path yyyy/mm/dd/ to /images/
