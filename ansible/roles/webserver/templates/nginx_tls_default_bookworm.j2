@@ -27,12 +27,25 @@ server {
   gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml;
   gzip_disable "MSIE [1-6]\.";
 
+  # Onion-Location header
+  add_header Onion-Location http://rz6hbfoj5gvxlygbilkw5ubg45bgxhjlxw754pjmw4dm6mthczi5jjad.onion$request_uri;
+
   location ~ /images/(.*) {
     alias /srv/images/$1;
   }
 
   location ~ /videos/(.*) {
     alias /srv/videos/$1;
+  }
+
+  location /upload {
+    client_max_body_size 1024M; # Set the maximum file size to 1 GB
+
+    # Use alias to map the URL to /srv/audio
+    alias /srv/audio/;
+
+    # You can customize this line as per your requirements
+    try_files $uri $uri/ =404;
   }
 
   location / {
@@ -45,5 +58,5 @@ server {
   }
 
   # Rewrite the old path yyyy/mm/dd/ to /images/
-  rewrite "^/image/\d{4}/\d{2}/\d{2}/(.+)$" /images/$1 permanent;
+  # rewrite "^/image/\d{4}/\d{2}/\d{2}/(.+)$" /images/$1 permanent;
 }
