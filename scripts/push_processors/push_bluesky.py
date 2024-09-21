@@ -60,7 +60,7 @@ post_text = SerbianFlag + annotation + '\n\n#NOAA #NOAA15 #NOAA18 #NOAA19 #Meteo
 
 image_data = []
 for image_path in images:
-  for i in range(0, 4):
+  for i in range(0, 3):
     with open(image_path[i], 'rb') as f:
       image_data.append(f.read())
 
