@@ -109,6 +109,7 @@ if [ $? -eq 0 ]; then
 else
   die "  Something failed with the install - please inspect the logs above"
 fi
+
 log_running "Configure PHP local time zone..."
 if [ $? -eq 0 ]; then
    chmod +x $HOME/raspberry-noaa-v2/scripts/tools/configure_php_local_timezone.sh

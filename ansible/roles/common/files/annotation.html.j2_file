@@ -11,8 +11,7 @@
     * sun_elevation - elevation of the sun during the capture
     * pass_direction - direction of the satellite pass (relative to ground station)
     * pass_side - whether the pass was east/west of the base station (represented as "E" or "W")
-    * pass_side_long - long form of whether the pass was east/west of the base station (represented as "East" or "West")
-    * gain - SDR gain used for the capture, or 'Automatic' if gain was set to auto-mode (0 or 0.0)
+    * pass_side_long - long form of whether the pass was east/west of the base station (represented as "East" or "West")    * gain - SDR gain used for the capture, or 'Automatic' if gain was set to auto-mode (0 or 0.0)
 
   To have a variable replaced with the injected variables when this template is called, simply
   wrap the variable in double curly braces like this: {{ my_var }}
@@ -24,9 +23,9 @@
 <table style="width: 830px; text-align: left; background-color: silver; padding: 2px; height: 20px;">
   <tbody>
     <tr>
-      <td style="width: 310px;">
+      <td style="width: 322px;">
         <center>
-          <img height="72" src="raspberry-noaa-v2-logo.png" alt="RaspbiNOAA v2 Logo">
+          <img height="150" src="stamp.png" alt="My logo">
           <br>
           <font color="black">RaspiNOAA V2 | v4.0 | Bookworm 64-bit<br>https://{{ web_server_name }}</font>
         </center>
