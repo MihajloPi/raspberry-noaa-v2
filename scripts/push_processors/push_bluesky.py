@@ -56,14 +56,13 @@ else:
 client = Client()
 client.login(bluesky_username_and_server_instance_url, BLUESKY_APP_PASSWORD)
 
+
 post_text = SerbianFlag + annotation + '\n\n#NOAA #NOAA15 #NOAA18 #NOAA19 #MeteorM2_3 #MeteorM2_4 #weather #weathersats #APT #LRPT #wxtoimg #MeteorDemod #rtlsdr #gpredict #raspberrypi #RN2 #ISS'
+
 
 image_data = []
 for image_path in images:
   for i in range(0, 3):
     with open(image_path[i], 'rb') as f:
       image_data.append(f.read())
-
-#for image_group in images:
-#  # create post
       client.send_images(text=post_text, images=image_data)
