@@ -416,6 +416,9 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
                       WHERE decoded_passes.id = $pass_id \
                     );" >> $NOAA_LOG 2>&1
 
+  log "Creating animation for the webpage" "INFO"
+  $NOAA_HOME/scripts/image_processors/animation.sh >> $NOAA_LOG 2>&1
+
   # determine if auto-gain is set - handles "0" and "0.0" floats
   gain=$GAIN
   if [ $(echo "$GAIN==0"|bc) -eq 1 ]; then
