@@ -60,14 +60,6 @@
   command: pip3 install tweepy --break-system-packages
   when: enable_twitter_push | bool and raspbian_version.stdout == 'bookworm'
 
-- name: install tweepy if Twitter push is enabled (bullseye)
-  pip:
-    name:
-      - tweepy
-    state: present
-    executable: pip3
-  when: enable_twitter_push | bool and raspbian_version.stdout == 'bullseye'
-
 - name: drop template Twitter config file
   copy:
     src: tweepy.conf
@@ -85,14 +77,6 @@
 - name: install facebook-sdk if Facebook push is enabled (bookworm)
   command: pip3 install facebook-sdk --break-system-packages
   when: enable_facebook_push | bool and raspbian_version.stdout == 'bookworm'
-
-- name: install facebook-sdk if Facebook push is enabled (bullseye)
-  pip:
-    name:
-      - facebook-sdk
-    state: present
-    executable: pip3
-  when: enable_facebook_push | bool and raspbian_version.stdout == 'bullseye'
 
 - name: drop template Facebook config file
   copy:
@@ -112,14 +96,6 @@
   command: pip3 install facebook-sdk --break-system-packages
   when: enable_instagram_push | bool and raspbian_version.stdout == 'bookworm'
 
-- name: install facebook-sdk if Instagram push is enabled (bullseye)
-  pip:
-    name:
-      - facebook-sdk
-    state: present
-    executable: pip3
-  when: enable_instagram_push | bool and raspbian_version.stdout == 'bullseye'
-
 - name: drop template Instagram config file
   copy:
     src: instagram.conf
@@ -138,14 +114,6 @@
   command: pip3 install Mastodon.py --break-system-packages
   when: enable_mastodon_push | bool and raspbian_version.stdout == 'bookworm'
 
-- name: install Mastodon.py if Mastodon push is enabled (bullseye)
-  pip:
-    name:
-      - Mastodon.py
-    state: present
-    executable: pip3
-  when: enable_mastodon_push | bool and raspbian_version.stdout == 'bullseye'
-
 - name: drop template Mastodon config file
   copy:
     src: mastodon.conf
@@ -163,14 +131,6 @@
 - name: install atproto if Bluesky push is enabled (bookworm)
   command: pip3 install atproto --break-system-packages
   when: enable_bluesky_push | bool and raspbian_version.stdout == 'bookworm'
-
-- name: install atproto if Mastodon push is enabled (bullseye)
-  pip:
-    name:
-      - atproto
-    state: present
-    executable: pip3
-  when: enable_bluesky_push | bool and raspbian_version.stdout == 'bullseye'
 
 - name: drop template Bluesky config file
   copy:
