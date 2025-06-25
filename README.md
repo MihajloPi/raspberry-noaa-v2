@@ -16,6 +16,8 @@ Finally, if you're looking for one of the cheapest ways to get started from an a
 
 # Announcements
 
+* 25.6.2025. We are sunsetting the legacy 32 bit Raspberry OS support. Users running 32-bit Raspberry OS are **required** to update their system to 64-bit version in order to receive further updates and not break their local installation. Thank you everyone for the support.
+
 * 31.7.2024. We are sunsetting the legacy Debian Bullseye support for Raspberry Pi and x64 PCs. We have supported it for some time after the Bookworm support came out in May 2024. Thank you for using the raspberry-noaa-v2 project on these operating systems. New updates for SatDump and other features related to SatDump **will only be available for 64-bit Raspberry OS version Bookworm, and 64-bit Debian Bookworm-based Linux distributions for x64 PCs** as of now. If you'd like to continue receiving the new updates, we highly suggest you perform a full reinstallation of your operating system and conduct a fresh installation of raspberry-noaa-v2. It is possible to save previously received images before reinstalling the operating system by making a copy of `panel.db` file inside `~/raspberry-noaa-v2/db` directory and the whole `/srv` directory; restore these files after your new installation has finished. If you're satisfied with the current features available, you are free to use the system as-is. 
 
 # Raspberry NOAA (...and Meteor) V2
@@ -90,13 +92,9 @@ Also, check out [THIS LINK](docs/webpanel_screenshots.md) for some screen shots 
 
 ## Compatibility
 
-**NOTE: ONLY 32-bit OS is supported : Recommended is 'Bookworm' Release.**
+**NOTE: ONLY 64-bit OS is supported : Recommended is 'Bookworm' Release.**
 
-The original raspberry-noaa was tested on Raspberry Pi 2 and up. However, while this compatibility may have been maintained
-with raspberry-noaa-v2, ~~this version was developed and tested on a Raspberry Pi 4 - it has not been exhaustively tested on other variants
-of Raspberry Pi (but if you get it working on a version, please do submit a PR and mention it so this document can be updated!).~~, this version works on Pi 3, Pi 4 and Pi 5, and the variants of these models. If you can install 64 bit Debian Bookworm or Bullseye, it will probably work.
-
-As of September 2023, raspberry-noaa-v2 can also be installed on regular 64-bit computers running **ANY** Debian Bookworm-based distro. ~~It has been developed and tested on LMDE 6 "Faye" which I also recommend for users coming from Windows, as it has many similarities. It can be downloaded here: [https://mirrors.layeronline.com/linuxmint/debian/lmde-6-cinnamon-64bit.iso](https://mirrors.layeronline.com/linuxmint/debian/lmde-6-cinnamon-64bit.iso)~~ After providing Bookworm support, the recommended version for PCs running RN2 is plain old Debian Bookworm. Desktop environment (like Gnome, KDE, Cinammon, XFCE...) doesn't matter, it only has to be 64-bit Debian.
+This project works only on 64-bit Linux distributions, on both Raspberry Pi (Raspberry OS) and regular computers (Debian-based distributions). The support for 32-bit operating systems has been ended.
 
 If you test with another OS - again, please submit a PR and let us know how it works out!
 
