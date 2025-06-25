@@ -166,16 +166,6 @@
   command: pip3 install envbash==1.2.0 facebook-sdk==3.1.0 pysqlite3==0.5.1 --break-system-packages
   when: raspbian_version.stdout == 'bookworm'
 
-- name: Install required Python packages using pip3
-  pip:
-    name:
-      - envbash==1.2.0
-      - facebook-sdk==3.1.0
-      - pysqlite3==0.5.1
-    state: present
-    executable: pip3
-  when: raspbian_version.stdout == 'bullseye'
-
 - name: Installing predict on PCs (amd64)
   become: yes
   apt:
@@ -203,7 +193,7 @@
 - name: Installing SatDump
   become: yes
   apt:
-    deb: "{{ noaa_home }}/software/satdump_1.2.1-397f9ed6_{{ raspbian_version.stdout }}_{{ system_architecture }}.deb"
+    deb: "{{ noaa_home }}/software/satdump_1.2.3-fe29328b4_{{ raspbian_version.stdout }}_{{ system_architecture }}.deb"
     state: present
     update_cache: no
 

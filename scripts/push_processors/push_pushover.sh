@@ -48,4 +48,3 @@ log "Pushover is using attachment: ${push_attachment_file}" "INFO"
 
 # timeout 20 curl -s -k -d token=${APITOKEN} -d user=${USER} -d message="${TEXT}" -d title="${SAT}" -d priority=${PRIO} -d html=1 https://api.pushover.net/1/messages.json
 timeout 20 curl -s -k --form-string "token=${APITOKEN}" --form-string "user=${USER}" --form-string "message=${TEXT}" --form-string "title=${SAT}" --form-string "priority=${PRIO}" --form-string "html=1" ${push_attachment} https://api.pushover.net/1/messages.json
-

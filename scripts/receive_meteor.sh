@@ -413,6 +413,8 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
                       WHERE decoded_passes.id = $pass_id \
                     );" >> $NOAA_LOG 2>&1
 
+  log "Creating animation for the webpage" "INFO"
+  $NOAA_HOME/scripts/image_processors/animation.sh >> $NOAA_LOG 2>&1
 
   # handle Pushover pushing if enabled
   if [ "${ENABLE_PUSHOVER_PUSH}" == "true" ]; then

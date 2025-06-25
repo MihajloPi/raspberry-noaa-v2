@@ -3,57 +3,82 @@
 import os
 import sys
 import facebook as fb
+import requests
 
 def parse_facebook_config(file_path):
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
-    # Initialize variable to store the access token
     access_token = None
-
-    # Process each line in the file
+    page_id = None
     for line in lines:
-        # Remove leading and trailing whitespaces from the line
         line = line.strip()
-
-        # Skip empty lines or lines starting with a '#' (comments)
         if not line or line.startswith('#'):
             continue
-
-        # Split the line into key and value using the '=' separator
         key, value = line.split('=', 1)
-
-        # Remove leading and trailing whitespaces from the key and value
         key = key.strip()
         value = value.strip()
-
-        # Check if the key is 'FACEBOOK_ACCESS_TOKEN'
         if key == 'FACEBOOK_ACCESS_TOKEN':
             access_token = value.strip('\'"')
-            break  # No need to continue after finding the access token
+            break
+        elif key == 'FACEBOOK_PAGE_ID':
+            page_id = value.strip('\'"')
 
-    return access_token
+    return access_token, page_id
 
 config_path = os.path.expanduser("~/.facebook.conf")
-
-ACCESS_TOKEN_KEY = parse_facebook_config(config_path)
+ACCESS_TOKEN_KEY, PAGE_ID = parse_facebook_config(config_path)
 
 bot = fb.GraphAPI(ACCESS_TOKEN_KEY)
 
-imgs_id = []
 annotation = sys.argv[1]
 images = sys.argv[2]
 img_list = images.split()
 
+SerbianFlag = u'\U0001F1F7' + u'\U0001F1F8'
+message = SerbianFlag + " " + annotation
+
+imgs_id = []
+#for img in img_list:
+#    photo = open(img, "rb")
+#    response = bot.put_photo(image=photo, published=False)
+#    imgs_id.append(response['id'])
+#    photo.close()
+
 for img in img_list:
-  photo = open(img, "rb")
-  imgs_id.append(bot.put_photo(photo, album_id='me/photos',published=False)['id'])
-  photo.close()
+    photo = open(img, "rb")
+    response = bot.put_photo(image=photo.read(), published=False)
+    imgs_id.append(response['id'])
+    photo.close()
 
+upload_url = f'https://graph.facebook.com/v22.0/{PAGE_ID}/photos'
+
+#for img in img_list:
+#    params = {
+#       'access_token': ACCESS_TOKEN_KEY,
+#       'published': 'false',
+#       'url': img,
+#    }
+#
+#try:
+#        response = requests.post(upload_url, params=params)
+#        result = response.json()
+#
+#        if 'id' in result:
+#           img_id.append(result['id'])
+#        else:
+#           print(f"Error uploading photo: {result}")
+#
+#except requests.exceptions.RequestException as e:
+#    print(f"Request error: {e}")
+
+# Prepare the payload for posting all images
 args = dict()
-args["message"] = annotation + '\n\n#NOAA #NOAA15 #NOAA18 #NOAA19 #MeteorM2_3 #MeteorM2_4 #weather #weathersats #APT #LRPT #wxtoimg #MeteorDemod #rtlsdr #gpredict #raspberrypi #RN2 #ISS'
+args["message"] = message
 for img_id in imgs_id:
-  key = "attached_media["+str(imgs_id.index(img_id))+"]"
-  args[key] = "{'media_fbid': '"+img_id+"'}"
+    key = f"attached_media[{imgs_id.index(img_id)}]"
+    args[key] = f"{{'media_fbid': '{img_id}'}}"
 
-bot.request(path = '/me/feed', args = None, post_args = args, method = 'POST')
+bot.request(path='/me/feed', args=None, post_args=args, method='POST')
+
+print(f"Uploaded {len(imgs_id)} photos successfully!")

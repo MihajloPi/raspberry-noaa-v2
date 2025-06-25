@@ -2,13 +2,13 @@
 # base station configurations
 #   latitude: south values are negative
 #   longitude: west values are negative
-latitude: 40.712776
-longitude: -74.005974
-altitude: 0.0
+latitude: 43.333
+longitude: 21.9324
+altitude: 210
 
 #Website language settings
 #   lang_setting: see the 'webpanel/App/Lang' folder for available
-#                 languages (2-letter filename - e.g. ar, bg, de, en, es, nl, sr, ru, it, hu, gr, lt, kr, ro)
+#                 languages (2-letter filename - e.g. ar, bg, de, en, es, nl, sr, ru, it, hu, gr, lt)
 lang_setting: en
 
 # ntp configurations
@@ -17,20 +17,20 @@ lang_setting: en
 ntp_server: ''
 
 # receiver settings
-#   receiver_type - the receiver type which program uses ('rtlsdr', 'airspy_mini', 'airspy_r2', 'airspy_hf_plus_discovery', 'hackrf', 'sdrplay' or 'mirisdr')
-#   noaa_decoder - which receiver method to use (either 'wxtoimg' or 'satdump')
-#   meteor_decoder - which receiver method to use (either 'meteordemod' or 'satdump')
-receiver_type: 'rtlsdr'
+#   receiver_type - the receiver type which program uses ('rtlsdr', 'airspy_mini', 'airspy_r2' or 'hackrf' or 'sdrplay' or 'mirisdr')
+#   noaa_receiver  - which receiver method to use (either 'rtl_fm' or 'gnuradio' or 'satdump_record' or 'satdump_live')
+#   meteor_receiver - which receiver method to use (either 'rtl_fm' or 'gnuradio' or 'satdump_record' or 'satdump_live')
+receiver_type: 'airspy_r2'
 
-noaa_decoder: 'wxtoimg'
-meteor_decoder: 'meteordemod'
+noaa_decoder: 'satdump'
+meteor_decoder: 'satdump'
 
 # test settings when running test scripts
 #   test_gain - gain to use for scanner test scripts
 #   test_sdr_device_id - device ID of the SDR device to be used for scanner test scripts
 #   test_enable_bias_tee - whether to enable bias tee when running scanner test scripts
 #   test_freq_offset - receiver frequency offset (PPM)
-test_gain: 29.7
+test_gain: 19
 test_sdr_device_id: 0
 test_enable_bias_tee: false
 test_freq_offset: 0
@@ -59,44 +59,36 @@ noaa_15_schedule: true
 noaa_15_sdr_device_id: 0
 noaa_15_freq_offset: 0
 noaa_15_enable_bias_tee: false
-noaa_15_gain: 29.7
+noaa_15_gain: 15
 noaa_15_sun_min_elevation: 6
-noaa_15_sat_min_elevation: 30
-
-noaa_18_schedule: true
-noaa_18_sdr_device_id: 0
-noaa_18_freq_offset: 0
-noaa_18_enable_bias_tee: false
-noaa_18_gain: 29.7
-noaa_18_sun_min_elevation: 6
-noaa_18_sat_min_elevation: 30
+noaa_15_sat_min_elevation: 20
 
 noaa_19_schedule: true
 noaa_19_sdr_device_id: 0
 noaa_19_freq_offset: 0
 noaa_19_enable_bias_tee: false
-noaa_19_gain: 29.7
+noaa_19_gain: 15
 noaa_19_sun_min_elevation: 6
-noaa_19_sat_min_elevation: 30
+noaa_19_sat_min_elevation: 20
 
 meteor_m2_3_schedule: true
 meteor_m2_3_sdr_device_id: 0
 meteor_m2_3_freq_offset: 0
 meteor_m2_3_enable_bias_tee: false
-meteor_m2_3_gain: 29.7
+meteor_m2_3_gain: 15
 meteor_m2_3_schedule_sun_min_elevation: -6
 meteor_m2_3_sun_min_elevation: 6
-meteor_m2_3_sat_min_elevation: 30
+meteor_m2_3_sat_min_elevation: 20
 meteor_m2_3_80k_interleaving: false
 
 meteor_m2_4_schedule: true
 meteor_m2_4_sdr_device_id: 0
 meteor_m2_4_freq_offset: 0
 meteor_m2_4_enable_bias_tee: false
-meteor_m2_4_gain: 29.7
+meteor_m2_4_gain: 15
 meteor_m2_4_schedule_sun_min_elevation: -6
 meteor_m2_4_sun_min_elevation: 6
-meteor_m2_4_sat_min_elevation: 30
+meteor_m2_4_sat_min_elevation: 20
 meteor_m2_4_80k_interleaving: false
 
 # how many days to schedule passes - note this MUST be an even integer,
@@ -182,11 +174,11 @@ extend_for_annotation: true
 image_annotation_location: 'North'
 produce_polar_az_el_graph: false
 produce_polar_direction_graph: true
-ground_station_location: ''
-antenna_information: ''
+ground_station_location: 'Nis, Serbia'
+antenna_information: 'QFH'
 show_sun_elevation: true
 show_pass_direction: true
-produce_spectrogram: false    #NOTE: the spectrogram option here is available for NOAA only, and the spectrogrma produced is from demodulated audio, not IQ baseband file
+produce_spectrogram: true
 
 noaa_crop_telemetry: false
 produce_noaa_pristine_image: false
@@ -195,25 +187,25 @@ noaa_daytime_enhancements: 'MSA MSA-precip MCIR MCIR-precip HVC-precip HVCT-prec
 noaa_nighttime_enhancements: 'MCIR MCIR-precip HVCT ZA therm NO TA sea histeq enhanced-IR'
 noaa_crop_toptobottom: false
 noaa_interpolate: false
-noaa_jpg_image_quality: 90
+noaa_jpg_image_quality: 70
 noaa_thermal_temp_overlay: true
 noaa_thermal_temp_overlay_location: 'NorthEast'
 noaa_map_crosshair_enable: true
 noaa_map_crosshair_color: "0xcc3030"
-noaa_map_grid_degrees: 10.0
+noaa_map_grid_degrees: 0
 noaa_map_grid_color: "0xff0000"
 noaa_map_country_border_enable: true
 noaa_map_country_border_color: "0xffff00"
 noaa_map_state_border_enable: true
 noaa_map_state_border_color: "0xffff00"
-wxtoimg_map_offset: 10.5                    #Change this value only if you see map offsets from the ground on WXtoImg NOAA images
+wxtoimg_map_offset: 10.5                                        #Change this value only if you see map offsets from the ground on WXtoImg NOAA images
 
 meteor_daytime_enhancements: '221 321 124 MSA MCIR MCIR-precip HVC HVCT ZA therm sea CC HE HF MD BD MB JF JJ LC TA WV NO enhanced-IR'
 meteor_nighttime_enhancements: '654 456 MCIR MCIR-precip HVC HVCT ZA therm sea CC HE HF MD BD MB JF JJ LC TA WV NO enhanced-IR'
 flip_meteor_image: true
-meteor_jpg_image_quality: 90
+meteor_jpg_image_quality: 70
 meteor_draw_map_overlay: true
-meteor_draw_cities: true
+meteor_draw_cities: false
 meteor_map_crosshair_enable: true
 meteor_map_crosshair_color: "#CC3030"
 meteor_map_country_border_color: "#FFFF00"
@@ -241,16 +233,16 @@ meteor_create_spreaded_images_without_overlay: true
 #                            https://www.php.net/manual/en/datetime.format.php or else bad things will happen
 #   web_datetime_format - format to display date and time in the web interface for captures - note that this MUST conform to
 #                         https://www.php.net/manual/en/datetime.format.php or else bad things will happen
-web_server_name: raspberry-noaa.localdomain
+web_server_name: satellite.voxgalactica.com
 enable_non_tls: true
 web_port: 80
 enable_tls: false
 web_tls_port: 443
 lock_admin_page: true
-admin_username: 'admin'
-admin_password: 'admin'
-web_passes_date_format: 'm/d/Y'
-web_datetime_format: 'm/d/Y H:i:s'
+admin_username: 'mihajlo'
+admin_password: 'Caricalea2014'
+web_passes_date_format: 'd.m.Y.'
+web_datetime_format: 'd.m.Y. H:i:s'
 
 # log level for output from scripts
 log_level: DEBUG
@@ -261,16 +253,12 @@ log_level: DEBUG
 # the processing and space requirements
 enable_satvis: true
 
-
-# whether to enable the "Coronal mass ejection activity" display
-# in the passes view - note that the GIFs can be ~70 MiB and not cached
-# thus they slow down the page & can lead to quite big data usage
-enable_coronal: false
-
 # whether to enable the image video in the passes view - note that this
 # is by default disabled on "extra-small" devices such as phones due
 # to the processing and space requirements
-enable_animation: false
+enable_animation: true
+
+enable_coronal: true
 
 # operating system configurations
 #   disable_wifi_power_mgmt - if running wireless internet and you want to
@@ -301,7 +289,7 @@ contribute_to_community_composites: false
 contribute_to_community_composites_url: 'https://voxgalactica.com/upload'
 
 enable_email_push: false
-email_push_address: test@ifttt.com
+email_push_address: mihajlo.raspberrypi@gmail.com
 enable_email_schedule_push: false
 enable_discord_push: true
 discord_noaa_webhook_url: 'https://discord.com/api/webhooks/1135901731918717068/ZELG3Sv1fRxQ8KgoYtMMOBYM07az0yIkzeLdad-8WxxhV-F8LhPQdZFFon044awMvLsD'
@@ -311,11 +299,11 @@ pushover_link_url: 'https://<url-to-webpanel>/captures/listImages'
 pushover_apitoken: ''
 pushover_user: ''
 pushover_prio: 0
-enable_twitter_push: false
-enable_bluesky_push: false
-enable_mastodon_push: false
-enable_facebook_push: false
-enable_instagram_push: false
+enable_twitter_push: true
+enable_bluesky_push: true
+enable_mastodon_push: true
+enable_facebook_push: true
+enable_instagram_push: true
 enable_slack_push: false
 slack_push_url: ''
 slack_push_to: ''

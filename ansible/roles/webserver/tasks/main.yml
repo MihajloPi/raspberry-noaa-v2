@@ -56,18 +56,6 @@
     state: present
     name: nginx
 
-- name: install php (bullseye)
-  become: yes
-  apt:
-    update_cache: no
-    state: present
-    name:
-      - php8.0-fpm
-      - php8.0-mbstring
-      - php8.0-sqlite3
-      - php7.4-intl
-  when: raspbian_version.stdout != 'bookworm'
-
 - name: install php (bookworm)
   become: yes
   apt:
@@ -198,7 +186,7 @@
   become: yes
   command: ufw enable
 
-- name: nginx non-tls config file
+- name: nginx config file
   become: yes
   template:
     src: "nginx_default_{{ raspbian_version.stdout }}.j2"
@@ -206,8 +194,51 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart nginx
   when: enable_non_tls|bool
+
+- name: nginx www config file
+  become: yes
+  template:
+    src: "nginx_www_default_{{ raspbian_version.stdout }}.j2"
+    dest: /etc/nginx/sites-available/www-default
+    owner: root
+    group: root
+    mode: 0644
+  when: enable_non_tls|bool
+
+- name: nginx non-tls config symlink
+  become: yes
+  file:
+    src: /etc/nginx/sites-available/default
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+    owner: root
+    group: root
+  when: enable_non_tls|bool
+
+- name: nginx www non-tls config symlink
+  become: yes
+  file:
+    src: /etc/nginx/sites-available/www-default
+    dest: /etc/nginx/sites-enabled/www-default
+    state: link
+    owner: root
+    group: root
+  when: enable_non_tls|bool
+
+- name: remove non-tls site enable if disabled
+  become: yes
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  when: not enable_non_tls|bool
+
+- name: remove www non-tls site enable if disabled
+  become: yes
+  file:
+    path: /etc/nginx/sites-enabled/www-default
+    state: absent
+  when: not enable_non_tls|bool
 
 - name: nginx non-tls config symlink
   become: yes
@@ -236,7 +267,18 @@
     owner: root
     group: root
     mode: 0644
-  when: enable_tls|bool 
+  when: enable_tls|bool
+  notify: restart nginx
+
+- name: www nginx tls config file (bookworm)
+  become: yes
+  template:
+    src: "nginx_tls_default_{{ raspbian_version.stdout }}.j2"
+    dest: /etc/nginx/sites-available/default-tls
+    owner: root
+    group: root
+    mode: 0644
+  when: enable_tls|bool
   notify: restart nginx
 
 - name: nginx tls config symlink
@@ -248,7 +290,16 @@
     owner: root
     group: root
   when: enable_tls|bool
-  notify: restart nginx
+
+- name: nginx www tls config symlink
+  become: yes
+  file:
+    src: /etc/nginx/sites-available/www-default-tls
+    dest: /etc/nginx/sites-enabled/www-default-tls
+    state: link
+    owner: root
+    group: root
+  when: enable_tls|bool
 
 - name: remove tls site enable if disabled
   become: yes
@@ -256,7 +307,25 @@
     path: /etc/nginx/sites-enabled/default-tls
     state: absent
   when: not enable_tls|bool
-  notify: restart nginx
+
+- name: remove www tls site enable if disabled
+  become: yes
+  file:
+    path: /etc/nginx/sites-enabled/www-default-tls
+    state: absent
+  when: not enable_tls|bool
+
+- name: Delete /var/run/tor-website.sock file to prevent issues when restarting the Nginx server
+  become: yes
+  file:
+    path: /var/run/tor-website.sock
+    state: absent
+
+- name: restart nginx
+  become: yes
+  service:
+    name: nginx
+    state: restarted
 
 - name: ensure nginx is running
   become: yes

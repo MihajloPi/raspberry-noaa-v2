@@ -41,30 +41,33 @@ config_path = os.path.expanduser("~/.instagram.conf")
 
 ACCESS_TOKEN, ACCOUNT_ID = parse_instagram_config(config_path)
 
-graph_url = 'https://graph.facebook.com/v17.0/'
+graph_url = 'https://graph.facebook.com/v22.0'
 
 annotation = sys.argv[1]
 image = sys.argv[2]
 website = sys.argv[3]
 
+SerbianFlag = u'\U0001F1F7' + u'\U0001F1F8'
+
 def publish_image():
-  post_url = f'https://graph.facebook.com/v17.0/{ACCOUNT_ID}/media'
+  post_url = f'{graph_url}/{ACCOUNT_ID}/media'
   image_url = f'https://{website}/images/{image}'
 
   payload = {
              'image_url': image_url,
-             'caption': annotation + '\n\n#NOAA #NOAA15 #NOAA18 #NOAA19 #MeteorM2_3 #MeteorM2_4 #weather #weathersats #APT #LRPT #wxtoimg #MeteorDemod #rtlsdr #gpredict #raspberrypi #RN2 #ISS',
+             'caption': SerbianFlag+ annotation + '\n\n#NOAA #NOAA15 #NOAA18 #NOAA19 #MeteorM2_3 #MeteorM2_4 #weather #weathersats #APT #LRPT #wxtoimg #MeteorDemod #rtlsdr #gpredict #raspberrypi #RN2 #ISS',
              'access_token': ACCESS_TOKEN,
             }
   r = requests.post(post_url, data = payload)
-  print(r.text)
-  print("Media uploaded successfully!")
+#  print(r.text)
+#  print("Media uploaded successfully!")
 
   results = json.loads(r.text)
+  print(r.text)
 
   if 'id' in results:
     creation_id=results['id']
-    second_url = f'https://graph.facebook.com/v17.0/{ACCOUNT_ID}/media_publish'
+    second_url = f'{graph_url}/{ACCOUNT_ID}/media_publish'
     second_payload = {
                       'creation_id': creation_id,
                       'access_token': ACCESS_TOKEN,

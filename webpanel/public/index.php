@@ -1,5 +1,8 @@
 <?php
 
+date_default_timezone_set('Europe/Belgrade');
+
+
 # composer auto-loading
 require dirname(__DIR__) . '/vendor/autoload.php';
 
