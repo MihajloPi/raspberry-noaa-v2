@@ -43,6 +43,16 @@ imgs_id = []
 #    imgs_id.append(response['id'])
 #    photo.close()
 
+SerbianFlag = u'\U0001F1F7' + u'\U0001F1F8'
+message = SerbianFlag + " " + annotation
+
+imgs_id = []
+#for img in img_list:
+#    photo = open(img, "rb")
+#    response = bot.put_photo(image=photo, published=False)
+#    imgs_id.append(response['id'])
+#    photo.close()
+
 for img in img_list:
     photo = open(img, "rb")
     response = bot.put_photo(image=photo.read(), published=False)
