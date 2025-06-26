@@ -34,9 +34,7 @@ bot = fb.GraphAPI(ACCESS_TOKEN_KEY)
 annotation = sys.argv[1]
 images = sys.argv[2]
 img_list = images.split()
-
-SerbianFlag = u'\U0001F1F7' + u'\U0001F1F8'
-message = SerbianFlag + " " + annotation
+message = annotation
 
 imgs_id = []
 #for img in img_list:
