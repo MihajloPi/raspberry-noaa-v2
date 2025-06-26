@@ -34,7 +34,7 @@ bot = fb.GraphAPI(ACCESS_TOKEN_KEY)
 annotation = sys.argv[1]
 images = sys.argv[2]
 img_list = images.split()
-message = annotation
+message = annotation + + '\n\n#NOAA #NOAA15 #NOAA19 #MeteorM2_3 #MeteorM2_4 #weather #weathersats #APT #LRPT #wxtoimg #MeteorDemod #rtlsdr #gpredict #raspberrypi #RN2 #ISS'
 
 imgs_id = []
 #for img in img_list:
