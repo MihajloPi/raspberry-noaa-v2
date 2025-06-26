@@ -1,8 +1,4 @@
 <?php
-
-date_default_timezone_set('Europe/Belgrade');
-
-
 # composer auto-loading
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -17,5 +13,4 @@ include(__DIR__ . '/../Lib/Router.php');
 
 # handle route dispatching
 $router = new Lib\Router();
-
 ?>
