@@ -30,8 +30,4 @@ log_file: "/var/log/raspberry-noaa-v2/output.log"
 tls_cert: /etc/letsencrypt/live/{{ web_server_name }}/fullchain.pem
 tls_cert_key: /etc/letsencrypt/live/{{ web_server_name }}/privkey.pem
 tls_trusted_certificate: /etc/letsencrypt/live/{{ web_server_name }}/chain.pem
-
-www_tls_cert: /etc/letsencrypt/live/www.{{ web_server_name }}/fullchain.pem
-www_tls_cert_key: /etc/letsencrypt/live/www.{{ web_server_name }}/privkey.pem
-www_tls_trusted_certificate: /etc/letsencrypt/live/www.{{ web_server_name }}/chain.pem
 ...
