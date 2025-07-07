@@ -201,8 +201,9 @@ class Capture extends \Lib\Model {
           $enhancements = array_map(function($x) { return "-" . $x . ".jpg"; }, explode(' ', Config::NOAA_NIGHT_ENHANCEMENTS));
         }
         $satdump_enhancements = [
-            "Clouds_Underlay.jpg",
+            "-Clouds_Underlay.jpg",
             "-224.jpg",
+            "-MSA.jpg",
             "-MSA_Rain.jpg",
             "-MCIR_Rain.jpg",
             "-Thermal_Channel.jpg",
