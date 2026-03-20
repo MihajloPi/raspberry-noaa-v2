@@ -71,9 +71,9 @@ if [ "${update_tle}" == "1" ]; then
 
   # get the txt files for orbit information
   log "Downloading new TLE files from source" "INFO"
-  wget -r "http://${tle_addr}/NORAD/elements/weather.txt" --no-check-certificate -O "${WEATHER_TXT}" >> $NOAA_LOG 2>&1
-  wget -r "http://${tle_addr}/NORAD/elements/amateur.txt" --no-check-certificate -O "${AMATEUR_TXT}" >> $NOAA_LOG 2>&1
-  #wget -r "http://${tle_addr}/NORAD/elements/active.txt" --no-check-certificate -O "${ACTIVE_TXT}" >> $NOAA_LOG 2>&1
+  wget -r "http://${tle_addr}/NORAD/elements/gp.php?GROUP=weather&amp;FORMAT=tle" --no-check-certificate -O "${WEATHER_TXT}" >> $NOAA_LOG 2>&1
+  wget -r "http://${tle_addr}/NORAD/elements/gp.php?GROUP=amateur&amp;FORMAT=tle" --no-check-certificate -O "${AMATEUR_TXT}" >> $NOAA_LOG 2>&1
+  wget -r "http://${tle_addr}/NORAD/elements/gp.php?GROUP=active&amp;FORMAT=tle" --no-check-certificate -O "${ACTIVE_TXT}" >> $NOAA_LOG 2>&1
 
   log "Copying TLEs for SatDump" "INFO"
   cp "${WEATHER_TXT}" "/home/$TARGET_USER/.config/satdump/satdump_tles.txt" >> $NOAA_LOG 2>&1
@@ -84,10 +84,10 @@ if [ "${update_tle}" == "1" ]; then
   #   because it cannot handle that level of sub-directory
   log "Clearing and re-creating TLE file with latest..." "INFO"
   echo -n "" > $TLE_OUTPUT
-  grep "NOAA 15" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
-  grep "NOAA 18" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
-  grep "NOAA 19" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
-  grep "METEOR-M 2" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
+  #grep "NOAA 15" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
+  #grep "NOAA 18" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
+  #grep "NOAA 19" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
+  #grep "METEOR-M 2" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
   grep "METEOR-M2 3" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
   grep "METEOR-M2 4" $WEATHER_TXT -A 2 >> $TLE_OUTPUT
 elif [ ! -f $WEATHER_TXT ] || [ ! -f $AMATEUR_TXT ] || [ ! -f $TLE_OUTPUT ]; then
@@ -139,18 +139,18 @@ fi
 
 # create schedules to call respective receive scripts
 log "Scheduling new capture jobs..." "INFO"
-if [ "$NOAA_15_SCHEDULE" == "true" ]; then
-  log "Scheduling NOAA 15 captures..." "INFO"
-  $NOAA_HOME/scripts/schedule_captures.sh "NOAA 15" "receive_noaa.sh" $TLE_OUTPUT $start_time_ms $end_time_ms >> $NOAA_LOG 2>&1
-fi
-if [ "$NOAA_18_SCHEDULE" == "true" ]; then
-  log "Scheduling NOAA 18 captures..." "INFO"
-  $NOAA_HOME/scripts/schedule_captures.sh "NOAA 18" "receive_noaa.sh" $TLE_OUTPUT $start_time_ms $end_time_ms >> $NOAA_LOG 2>&1
-fi
-if [ "$NOAA_19_SCHEDULE" == "true" ]; then
-  log "Scheduling NOAA 19 captures..." "INFO"
-  $NOAA_HOME/scripts/schedule_captures.sh "NOAA 19" "receive_noaa.sh" $TLE_OUTPUT $start_time_ms $end_time_ms >> $NOAA_LOG 2>&1
-fi
+#if [ "$NOAA_15_SCHEDULE" == "true" ]; then
+#  log "Scheduling NOAA 15 captures..." "INFO"
+#  $NOAA_HOME/scripts/schedule_captures.sh "NOAA 15" "receive_noaa.sh" $TLE_OUTPUT $start_time_ms $end_time_ms >> $NOAA_LOG 2>&1
+#fi
+#if [ "$NOAA_18_SCHEDULE" == "true" ]; then
+#  log "Scheduling NOAA 18 captures..." "INFO"
+#  $NOAA_HOME/scripts/schedule_captures.sh "NOAA 18" "receive_noaa.sh" $TLE_OUTPUT $start_time_ms $end_time_ms >> $NOAA_LOG 2>&1
+#fi
+#if [ "$NOAA_19_SCHEDULE" == "true" ]; then
+#  log "Scheduling NOAA 19 captures..." "INFO"
+#  $NOAA_HOME/scripts/schedule_captures.sh "NOAA 19" "receive_noaa.sh" $TLE_OUTPUT $start_time_ms $end_time_ms >> $NOAA_LOG 2>&1
+#fi
 if [ "$METEOR_M2_3_SCHEDULE" == "true" ]; then
   log "Scheduling Meteor-M2 3 captures..." "INFO"
   $NOAA_HOME/scripts/schedule_captures.sh "METEOR-M2 3" "receive_meteor.sh" $TLE_OUTPUT $start_time_ms $end_time_ms >> $NOAA_LOG 2>&1
