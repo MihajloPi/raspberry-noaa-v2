@@ -193,7 +193,7 @@
 - name: Installing SatDump
   become: yes
   apt:
-    deb: "{{ noaa_home }}/software/satdump_2.0.0-alpha-407b27a37_{{ raspbian_version.stdout }}_{{ system_architecture }}.deb"
+    deb: "{{ noaa_home }}/software/satdump_2.0.0-alpha-6ac80fedc_{{ raspbian_version.stdout }}_{{ system_architecture }}.deb"
     state: present
     update_cache: no
 
