@@ -16,7 +16,7 @@ import time
 
 import requests
 
-GRAPH_API_VERSION = "v22.0"
+GRAPH_API_VERSION = "v25.0"
 GRAPH_URL = f"https://graph.facebook.com/{GRAPH_API_VERSION}"
 
 
