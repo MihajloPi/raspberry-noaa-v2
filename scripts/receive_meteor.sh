@@ -461,7 +461,37 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
   # handle Bluesky pushing if enabled
   if [ "${ENABLE_BLUESKY_PUSH}" == "true" ]; then
     log "Pushing image enhancements to Bluesky" "INFO"
-    python3 ${PUSH_PROC_DIR}/push_bluesky.py "${push_annotation}" ${push_file_list} >> $NOAA_LOG 2>&1
+    bluesky_file_list=""
+    for i in $push_file_list; do
+      if [ -f "$i" ]; then
+        file_to_push="$i"
+        filesize=$(stat -c%s "$i")
+        if [ "$filesize" -gt 2000000 ]; then
+          temp_file="$(mktemp /tmp/bluesky.XXXXXX.jpg)"
+          quality=90
+          while [ "$quality" -ge 20 ] && [ "$(stat -c%s "$temp_file")" -gt 2000000 ]; do
+            $CONVERT "$i" -strip -quality "$quality" "$temp_file" >> $NOAA_LOG 2>&1
+            quality=$((quality - 10))
+          done
+          if [ "$(stat -c%s "$temp_file")" -le 2000000 ]; then
+            log "Compressed $i to $(stat -c%s "$temp_file") bytes for Bluesky" "INFO"
+            file_to_push="$temp_file"
+          else
+            log "Unable to compress $i below 2MB for Bluesky, using original file" "INFO"
+            rm -f "$temp_file"
+          fi
+        fi
+        bluesky_file_list="$bluesky_file_list $file_to_push"
+      fi
+    done
+
+    python3 ${PUSH_PROC_DIR}/push_bluesky.py "${push_annotation}" ${bluesky_file_list} >> $NOAA_LOG 2>&1
+
+    for tmp_file in $bluesky_file_list; do
+      if [[ "$tmp_file" == /tmp/bluesky.*.jpg ]]; then
+        rm -f "$tmp_file"
+      fi
+    done
   fi
 
   # handle Instagram pushing if enabled
