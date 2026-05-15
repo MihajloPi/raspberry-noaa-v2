@@ -328,15 +328,18 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
       '-MCIR_projected.jpg'
       '-321_corrected.jpg'
       '-321_projected.jpg'
+      '-equidistant_321.jpg'
       '-equidistant_321_composite.jpg'
       '-mercator_321_composite.jpg'
       '-spread_321.jpg'
       '-spread_123.jpg'
       '-221_corrected.jpg'
       '-221_projected.jpg'
+      '-equidistant_221.jpg'
       '-equidistant_221_composite.jpg'
       '-mercator_321_composite.jpg'
       '-spread_221.jpg'
+      '-equidistant_654.jpg'
       '-equidistant_654.composite.jpg'
       '-mercator_654_composite.jpg'
       '-spread_654.jpg'
@@ -464,9 +467,20 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
   # handle Instagram pushing if enabled
   if [ "${ENABLE_INSTAGRAM_PUSH}" == "true" ]; then
     log "Pushing image enhancements to Instagram" "INFO"
-    $CONVERT "${IMAGE_FILE_BASE}${suffix}" -resize "1080x1350>" -gravity center -background black -extent 1080x1350 "${IMAGE_FILE_BASE}-instagram.jpg" >> $NOAA_LOG 2>&1
-    python3 ${PUSH_PROC_DIR}/push_instagram.py "${push_annotation}" $(sed 's|/srv/images/||' <<< "${IMAGE_FILE_BASE}-instagram.jpg") ${WEB_SERVER_NAME} >> $NOAA_LOG 2>&1
-    rm "${IMAGE_FILE_BASE}-instagram.jpg" >> $NOAA_LOG 2>&1
+
+    instagram_source=""
+    for suffix in "${meteor_suffixes[@]}"; do
+      if [[ -f "${IMAGE_FILE_BASE}${suffix}" ]]; then
+        instagram_source="${IMAGE_FILE_BASE}${suffix}"
+        break
+      fi
+    done
+    
+    if [ -n "$instagram_source" ]; then
+      $CONVERT "$instagram_source" -resize "1080x1350>" -gravity center -background black -extent 1080x1350 "${IMAGE_FILE_BASE}-instagram.jpg" >> $NOAA_LOG 2>&1
+      python3 ${PUSH_PROC_DIR}/push_instagram.py "${push_annotation}" $(sed 's|/srv/images/||' <<< "${IMAGE_FILE_BASE}-instagram.jpg") ${WEB_SERVER_NAME} >> $NOAA_LOG 2>&1
+      rm "${IMAGE_FILE_BASE}-instagram.jpg" >> $NOAA_LOG 2>&1
+    fi
   fi
 
   # handle Matrix pushing if enabled
