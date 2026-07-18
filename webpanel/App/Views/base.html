@@ -16,9 +16,9 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
                            integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <title>YT1GS - Mihajlo's Weather Satellite Receiver</title>
+    <title>Raspberry NOAA V2</title>
 
-    <link rel="shortcut icon" href="/assets/web_img/stamp.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/assets/web_img/favicon.ico" type="image/x-icon"/>
   </head>
   <body>
     <header class="mb-3">
@@ -33,6 +33,17 @@
           <li class="nav-item {% if page == 'captures' or page == 'capture'  %} active {% endif %}">
             <a class="nav-link" href="/captures?page_no=1">{{ lang['captures'] }}</a>
           </li>
+          {# [Claude AI edit] START - "Satellite view" tab, only rendered when
+             experimental_features: true is set in config/settings.yml (the
+             'is defined' guard tolerates a Config.php generated before the
+             constant existed) #}
+          {% if constant('Config\\Config::ENABLE_EXPERIMENTAL_FEATURES') is defined
+                and constant('Config\\Config::ENABLE_EXPERIMENTAL_FEATURES') == 'true' %}
+            <li class="nav-item {% if page == 'satellite' %} active {% endif %}">
+              <a class="nav-link" href="/satellite">{{ lang['satellite_view']|default('Satellite view') }}</a>
+            </li>
+          {% endif %}
+          {# [Claude AI edit] END #}
           <li class="nav-item {% if page == 'admin' %} active {% endif %}">
             <a class="nav-link" href="/admin/passes">{{ lang['admin'] }}</a>
           </li>
