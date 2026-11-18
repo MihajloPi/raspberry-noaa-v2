@@ -506,7 +506,9 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
       [[ -f "$image" ]] || continue
       instagram_index=$((instagram_index + 1))
       instagram_file="${IMAGE_FILE_BASE}-instagram-${instagram_index}.jpg"
-      $CONVERT "$image" -resize "1080x1350>" -gravity center -background black -extent 1080x1350 "$instagram_file" >> $NOAA_LOG 2>&1
+      # 1440x1800 = largest image the Instagram API publishes (max width 1440, tallest ratio 4:5);
+      # images are fitted inside it (padded with black, never cropped) and saved as sRGB JPEG well under 8 MB
+      $CONVERT "$image" -colorspace sRGB -resize "1440x1800" -gravity center -background black -extent 1440x1800 -quality 92 "$instagram_file" >> $NOAA_LOG 2>&1
       instagram_files+=("$instagram_file")
     done
 
