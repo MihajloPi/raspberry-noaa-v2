@@ -498,18 +498,23 @@ if [ -n "$(find /srv/images -maxdepth 1 -type f -name "$(basename "$IMAGE_FILE_B
   if [ "${ENABLE_INSTAGRAM_PUSH}" == "true" ]; then
     log "Pushing image enhancements to Instagram" "INFO"
 
-    instagram_source=""
-    for suffix in "${meteor_suffixes[@]}"; do
-      if [[ -f "${IMAGE_FILE_BASE}${suffix}" ]]; then
-        instagram_source="${IMAGE_FILE_BASE}${suffix}"
-        break
-      fi
+    # post the same images pushed to the other platforms as carousel(s) - push_instagram.py
+    # splits them into posts of max 10; each is padded to Instagram's 4:5 format so none get cropped
+    instagram_files=()
+    instagram_index=0
+    for image in $push_file_list; do
+      [[ -f "$image" ]] || continue
+      instagram_index=$((instagram_index + 1))
+      instagram_file="${IMAGE_FILE_BASE}-instagram-${instagram_index}.jpg"
+      $CONVERT "$image" -resize "1080x1350>" -gravity center -background black -extent 1080x1350 "$instagram_file" >> $NOAA_LOG 2>&1
+      instagram_files+=("$instagram_file")
     done
-    
-    if [ -n "$instagram_source" ]; then
-      $CONVERT "$instagram_source" -resize "1080x1350>" -gravity center -background black -extent 1080x1350 "${IMAGE_FILE_BASE}-instagram.jpg" >> $NOAA_LOG 2>&1
-      python3 ${PUSH_PROC_DIR}/push_instagram.py "${push_annotation}" $(sed 's|/srv/images/||' <<< "${IMAGE_FILE_BASE}-instagram.jpg") ${WEB_SERVER_NAME} >> $NOAA_LOG 2>&1
-      rm "${IMAGE_FILE_BASE}-instagram.jpg" >> $NOAA_LOG 2>&1
+
+    if (( ${#instagram_files[@]} > 0 )); then
+      python3 ${PUSH_PROC_DIR}/push_instagram.py "${push_annotation}" "${WEB_SERVER_NAME}" $(for f in "${instagram_files[@]}"; do basename "$f"; done) >> $NOAA_LOG 2>&1
+      rm "${instagram_files[@]}" >> $NOAA_LOG 2>&1
+    else
+      log "No images found to push to Instagram" "WARN"
     fi
   fi
 
